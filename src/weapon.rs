@@ -3,7 +3,7 @@ use crate::skill::SkillId;
 pub mod lance;
 
 pub struct Weapon {
-    name: &'static str,
+    pub name: &'static str,
     tree: &'static str,
     pub attack: u16,
     pub affinity: i16,

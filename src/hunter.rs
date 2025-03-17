@@ -58,14 +58,42 @@ impl<'a> Set<'a> {
             }
         }
 
+        let total_attack = base_attack + bonus_attack;
+        let total_affinity = base_affinity + bonus_affinity;
+
         Hunter {
             base_attack,
             bonus_attack,
-            total_attack: base_attack + bonus_attack,
+            total_attack,
             base_affinity,
             bonus_affinity,
-            total_affinity: base_affinity + bonus_affinity,
+            total_affinity,
+            // TODO: Handle negative affinity, over 100% affinity, and crit boost.
+            effective_raw: f64::from(total_attack)
+                * (1.0 + 1.25 * f64::from(total_affinity) / 100.0),
         }
+    }
+
+    pub fn print(&self) {
+        println!("Weapon: {}", self.weapon.name);
+        println!("Head:   {}", self.head.name);
+        println!("Chest:  {}", self.chest.name);
+        println!("Arms:   {}", self.arms.name);
+        println!("Waist:  {}", self.waist.name);
+        println!("Legs:   {}", self.legs.name);
+        println!("Talis:  {}", self.talisman.name);
+    }
+
+    pub fn print_one_line(&self) {
+        println!(
+            "{} -- {} -- {} -- {} -- {} -- {}",
+            self.weapon.name,
+            self.chest.name,
+            self.arms.name,
+            self.waist.name,
+            self.legs.name,
+            self.talisman.name
+        );
     }
 }
 
@@ -76,4 +104,20 @@ pub struct Hunter {
     pub base_affinity: i16,
     pub bonus_affinity: i16,
     pub total_affinity: i16,
+    pub effective_raw: f64,
+}
+impl Hunter {
+    pub fn print_summary(&self) {
+        println!("Effective raw: {}", self.effective_raw);
+    }
+
+    pub fn print_verbose(&self) {
+        println!("Base attack: {}", self.base_attack);
+        println!("Bonus attack: {}", self.bonus_attack);
+        println!("Total attack: {}", self.total_attack);
+        println!("Base affinity: {}", self.base_affinity);
+        println!("Bonus affinity: {}", self.bonus_affinity);
+        println!("Total affinity: {}", self.total_affinity);
+        println!("Effective raw: {}", self.effective_raw);
+    }
 }

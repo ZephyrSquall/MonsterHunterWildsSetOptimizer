@@ -8,7 +8,7 @@ mod talisman;
 mod waist;
 
 pub struct Armor {
-    name: &'static str,
+    pub name: &'static str,
     set: &'static str,
     defense: u16,
     slots: &'static [u8],
