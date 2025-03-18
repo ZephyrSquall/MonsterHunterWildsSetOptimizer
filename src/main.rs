@@ -1,4 +1,9 @@
+use crate::armor::arms::ARMS_ARMORS;
+use crate::armor::chest::CHEST_ARMORS;
 use crate::armor::head::HEAD_ARMORS;
+use crate::armor::legs::LEGS_ARMORS;
+use crate::armor::talisman::TALISMANS;
+use crate::armor::waist::WAIST_ARMORS;
 use crate::hunter::Set;
 use crate::weapon::lance::LANCES;
 use itertools::iproduct;
@@ -19,11 +24,11 @@ fn main() {
     for (weapon, head, chest, arms, waist, legs, talisman) in iproduct!(
         &LANCES,
         &HEAD_ARMORS,
-        &HEAD_ARMORS,
-        &HEAD_ARMORS,
-        &HEAD_ARMORS,
-        &HEAD_ARMORS,
-        &HEAD_ARMORS
+        &CHEST_ARMORS,
+        &ARMS_ARMORS,
+        &WAIST_ARMORS,
+        &LEGS_ARMORS,
+        &TALISMANS,
     ) {
         let set = Set {
             weapon,
@@ -34,7 +39,6 @@ fn main() {
             legs,
             talisman,
         };
-        set.print_one_line();
 
         let hunter = set.get_hunter();
         if hunter.effective_raw > highest_effective_raw {

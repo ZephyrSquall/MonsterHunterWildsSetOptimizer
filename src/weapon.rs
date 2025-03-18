@@ -9,9 +9,9 @@ pub struct Weapon {
     pub affinity: i16,
     element: Element,
     sharpness: Sharpness,
-    pub skills: &'static [(SkillId, u8)],
     slots: &'static [u8],
     defense: u16,
+    pub skills: &'static [(SkillId, u8)],
 }
 
 // The weapon's element or status. If not None, the enum also holds the base elemental/status attack
@@ -33,14 +33,19 @@ pub enum Element {
 
 // Sharpness is tracked by how many hits of sharpness it takes at a given sharpness level for the
 // weapon to drop to the previous sharpness level. Note that some weapon attacks consume less than 1
-// hit of sharpness, so the exact amount may differ in practice. Red sharpness is not tracked as it
-// is effectively infinite for all weapons. As the weapon stats screen does not display exact
-// numbers for sharpness, I obtain these numbers by assuming that the sharpness bar only increases
-// in increments of 10 hits (to my knowledge this has been true in every Monster Hunter game to
-// date), and carefully measuring the length of each segment. This is an error-prone process, so it
-// would be great if someone could double-check my numbers or point me to a reliable resource that
-// displays exact sharpness numbers.
+// hit of sharpness, so the exact amount may differ in practice. As the weapon stats screen does not
+// display exact numbers for sharpness, I obtain these numbers by assuming that the sharpness bar
+// only increases in increments of 10 hits (to my knowledge this has been true in every Monster
+// Hunter game to date), and carefully measuring the length of each segment. This is an error-prone
+// process, so it would be great if someone could double-check my numbers or point me to a reliable
+// resource that displays exact sharpness numbers. For now, I get sharpness numbers by copying the
+// sharpness image from Kiranico (https://mhwilds.kiranico.com/data/weapons) and counting the
+// pixels; every 2 pixels equals 10 hits of sharpness. As far as I can tell, Kiranico's sharpness
+// images are accurate with one exception: When the sharpness bar is full, Kiranico's image cuts off
+// the last 2 pixels. Thus I assume there's always an additional 10 hits over what Kiranico shows in
+// these circumstances, and I check in-game to see whether these last 10 hits are the same colour.
 struct Sharpness {
+    red: u16,
     orange: u16,
     yellow: u16,
     green: u16,

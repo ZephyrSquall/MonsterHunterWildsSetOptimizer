@@ -1,4 +1,4 @@
-use crate::armor::Armor;
+use crate::armor::{Armor, Talisman};
 use crate::skill::SkillId;
 use crate::skill::weapon_skill::WEAPON_SKILLS;
 use crate::weapon::Weapon;
@@ -10,7 +10,7 @@ pub struct Set<'a> {
     pub arms: &'a Armor,
     pub waist: &'a Armor,
     pub legs: &'a Armor,
-    pub talisman: &'a Armor,
+    pub talisman: &'a Talisman,
 }
 impl<'a> Set<'a> {
     fn get_skills(&self) -> Vec<&(SkillId, u8)> {
@@ -54,7 +54,11 @@ impl<'a> Set<'a> {
                 (skill.modifier.attack)(*level, &mut bonus_attack, base_attack);
                 (skill.modifier.affinity)(*level, &mut bonus_affinity);
             } else {
-                eprintln!("Skill not found");
+                // Printing this now causes runtime to go from roughly 0.03 s to over 100 s due to
+                // the vast number of times it is printed. It is commented out for now, but should
+                // be uncommented when skills are properly implemented to check for missed skill
+                // implementations.
+                //eprintln!("Skill not found");
             }
         }
 

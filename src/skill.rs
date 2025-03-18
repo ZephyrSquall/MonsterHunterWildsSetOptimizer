@@ -51,20 +51,47 @@ pub enum SkillType {
 #[derive(PartialEq)]
 pub enum SkillId {
     // Weapon skills
+    Airborne,
+    AttackBoost,
+    CriticalBoost,
+    CriticalDraw,
     CriticalElement,
     CriticalEye,
+    CriticalStatus,
+    Guard,
+    GuardUp,
     MastersTouch,
     OffensiveGuard,
+    PunishingDraw,
     SpeedSharpening,
 
     // Armor skills
+    Agitator,
+    Antivirus,
+    BlightResistance,
+    Burst,
     Coalescence,
+    Constitution,
+    ConvertElement,
+    ElementalAbsorption,
     EvadeWindow,
+    Flayer,
+    FlinchFree,
+    Partbreaker,
+    QuickSheathe,
+    RecoverySpeed,
+    WeaknessExploit,
 
     // Set Bonus skills
+    ArkveldsHunger,
     GoreMagalasTyranny,
+    GuardianArkveldsVitality,
 
     // Group skills
+    AlluringPelt,
+    FortifyingPelt,
+    GuardiansProtection,
+    GuardiansPulse,
     ScaleLayering,
     ScalingProwess,
 }

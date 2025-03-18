@@ -1,7 +1,7 @@
 use crate::armor::Armor;
 use crate::skill::SkillId;
 
-pub const HEAD_ARMORS: [Armor; 2] = [
+pub const HEAD_ARMORS: [Armor; 6] = [
     Armor {
         name: "Gore Helm α",
         set: "Gore α",
@@ -34,6 +34,73 @@ pub const HEAD_ARMORS: [Armor; 2] = [
             (SkillId::Coalescence, 1),
             (SkillId::GoreMagalasTyranny, 1),
             (SkillId::ScaleLayering, 1),
+        ],
+    },
+    Armor {
+        name: "Arkvulcan Helm α",
+        set: "Arkveld α",
+        defense: 66,
+        slots: &[],
+        fire_res: 2,
+        water_res: 0,
+        thunder_res: -1,
+        ice_res: 0,
+        dragon_res: -3,
+        skills: &[
+            (SkillId::ElementalAbsorption, 2),
+            (SkillId::ConvertElement, 1),
+            (SkillId::ArkveldsHunger, 1),
+            (SkillId::FortifyingPelt, 1),
+        ],
+    },
+    Armor {
+        name: "Arkvulcan Helm β",
+        set: "Arkveld β",
+        defense: 66,
+        slots: &[3, 2, 1],
+        fire_res: 2,
+        water_res: 0,
+        thunder_res: -1,
+        ice_res: 0,
+        dragon_res: -3,
+        skills: &[
+            (SkillId::ConvertElement, 1),
+            (SkillId::ArkveldsHunger, 1),
+            (SkillId::AlluringPelt, 1),
+        ],
+    },
+    Armor {
+        name: "G. Arkveld Helm α",
+        set: "Guardian Arkveld α",
+        defense: 66,
+        slots: &[1, 1],
+        fire_res: 2,
+        water_res: 0,
+        thunder_res: -1,
+        ice_res: 0,
+        dragon_res: -4,
+        skills: &[
+            (SkillId::Partbreaker, 2),
+            (SkillId::Flayer, 1),
+            (SkillId::GuardianArkveldsVitality, 1),
+            (SkillId::GuardiansPulse, 1),
+        ],
+    },
+    Armor {
+        name: "G. Arkveld Helm β",
+        set: "Guardian Arkveld β",
+        defense: 66,
+        slots: &[3, 1],
+        fire_res: 2,
+        water_res: 0,
+        thunder_res: -1,
+        ice_res: 0,
+        dragon_res: -4,
+        skills: &[
+            (SkillId::Flayer, 1),
+            (SkillId::Partbreaker, 1),
+            (SkillId::GuardianArkveldsVitality, 1),
+            (SkillId::GuardiansProtection, 1),
         ],
     },
 ];
