@@ -1,7 +1,7 @@
 use crate::armor::{Armor, Talisman};
 use crate::skill::SkillId;
 use crate::skill::weapon_skill::WEAPON_SKILLS;
-use crate::weapon::Weapon;
+use crate::weapon::{EffectiveSharpness, Weapon};
 
 pub struct Set<'a> {
     pub weapon: &'a Weapon,
@@ -35,7 +35,7 @@ impl<'a> Set<'a> {
         skills
     }
 
-    pub fn get_hunter(&self) -> Hunter {
+    pub fn get_hunter(self) -> Hunter<'a> {
         let base_attack = self.weapon.attack;
         let base_affinity = self.weapon.affinity;
 
@@ -62,19 +62,26 @@ impl<'a> Set<'a> {
             }
         }
 
+        let effective_sharpness = EffectiveSharpness::new(&self.weapon.sharpness);
+        let total_raw_sharpness_mod = effective_sharpness.get_avg_raw_sharpness_mod();
+
         let total_attack = base_attack + bonus_attack;
         let total_affinity = base_affinity + bonus_affinity;
 
         Hunter {
+            set: self,
             base_attack,
             bonus_attack,
             total_attack,
             base_affinity,
             bonus_affinity,
             total_affinity,
+            effective_sharpness,
+            total_raw_sharpness_mod,
             // TODO: Handle negative affinity, over 100% affinity, and crit boost.
             effective_raw: f64::from(total_attack)
-                * (1.0 + 1.25 * f64::from(total_affinity) / 100.0),
+                * (1.0 + 1.25 * f64::from(total_affinity) / 100.0)
+                * total_raw_sharpness_mod,
         }
     }
 
@@ -101,16 +108,19 @@ impl<'a> Set<'a> {
     }
 }
 
-pub struct Hunter {
+pub struct Hunter<'a> {
+    pub set: Set<'a>,
     pub base_attack: u16,
     pub bonus_attack: u16,
     pub total_attack: u16,
     pub base_affinity: i16,
     pub bonus_affinity: i16,
     pub total_affinity: i16,
+    pub effective_sharpness: EffectiveSharpness,
+    pub total_raw_sharpness_mod: f64,
     pub effective_raw: f64,
 }
-impl Hunter {
+impl<'a> Hunter<'a> {
     pub fn print_summary(&self) {
         println!("Effective raw: {}", self.effective_raw);
     }
