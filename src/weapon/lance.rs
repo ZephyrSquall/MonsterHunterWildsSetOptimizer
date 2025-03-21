@@ -1,5 +1,5 @@
 use crate::skill::SkillId;
-use crate::weapon::{Element, Sharpness, Weapon};
+use crate::weapon::{Element, Sharpness, Weapon, WeaponType};
 
 pub const LANCES: [Weapon; 20] = [
     Weapon {
@@ -20,6 +20,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 0,
         skills: &[(SkillId::CriticalEye, 2), (SkillId::SpeedSharpening, 2)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "Shining Pillar",
@@ -39,6 +40,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 0,
         skills: &[(SkillId::CriticalElement, 1), (SkillId::MastersTouch, 1)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "Sandsea Prallaya",
@@ -58,6 +60,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 0,
         skills: &[(SkillId::OffensiveGuard, 3)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "Indra Clairlance",
@@ -82,6 +85,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 0,
         skills: &[(SkillId::Guard, 2), (SkillId::OffensiveGuard, 1)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "Chrome Lance",
@@ -101,6 +105,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 0,
         skills: &[(SkillId::GuardUp, 3)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "Rompo Tetrotox",
@@ -120,6 +125,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 0,
         skills: &[(SkillId::GuardUp, 3)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "Abaddonian Osminog",
@@ -139,6 +145,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 0,
         skills: &[(SkillId::OffensiveGuard, 3)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "Hard Bone Lance",
@@ -158,6 +165,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 0,
         skills: &[(SkillId::GuardUp, 3), (SkillId::AttackBoost, 1)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "Windpierce Tsukibami",
@@ -177,6 +185,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 0,
         skills: &[(SkillId::Guard, 3), (SkillId::Airborne, 1)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "Bequeathed Regret",
@@ -196,6 +205,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 0,
         skills: &[(SkillId::OffensiveGuard, 3)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "Firetrail Kaminet",
@@ -215,6 +225,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 0,
         skills: &[(SkillId::Guard, 3)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "Fierceborer Dubhanith",
@@ -234,6 +245,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 20,
         skills: &[(SkillId::PunishingDraw, 3)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "G. Purifying Beaumains",
@@ -253,6 +265,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 3, 1],
         defense: 0,
         skills: &[(SkillId::Guard, 2)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "Purifying Beaumains",
@@ -272,6 +285,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 0,
         skills: &[(SkillId::Guard, 3)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "Gloomborer Urshanith",
@@ -291,6 +305,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 0,
         skills: &[(SkillId::OffensiveGuard, 3)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "Lala Aviculari",
@@ -310,6 +325,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 0,
         skills: &[(SkillId::CriticalDraw, 2), (SkillId::CriticalStatus, 1)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "Spear of Prominence",
@@ -329,6 +345,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 0,
         skills: &[(SkillId::CriticalBoost, 3)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "Fieberschild",
@@ -348,6 +365,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 0,
         skills: &[(SkillId::CriticalElement, 2)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "Gravios Lance",
@@ -367,6 +385,7 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 30,
         skills: &[(SkillId::GuardUp, 3)],
+        weapon_type: WeaponType::Lance,
     },
     Weapon {
         name: "Babel Spear",
@@ -386,5 +405,6 @@ pub const LANCES: [Weapon; 20] = [
         slots: &[3, 2, 1],
         defense: 0,
         skills: &[(SkillId::CriticalDraw, 3), (SkillId::Guard, 1)],
+        weapon_type: WeaponType::Lance,
     },
 ];

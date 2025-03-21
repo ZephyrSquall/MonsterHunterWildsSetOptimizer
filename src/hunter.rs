@@ -39,8 +39,8 @@ impl<'a> Set<'a> {
         let base_attack = self.weapon.attack;
         let base_affinity = self.weapon.affinity;
 
-        let mut bonus_attack = 0;
-        let mut bonus_affinity = 0;
+        let mut bonus_attack = 0.0;
+        let mut bonus_affinity = 0.0;
 
         for (skill_id, level) in self.get_skills() {
             let mut skill = None;
@@ -51,7 +51,7 @@ impl<'a> Set<'a> {
             }
 
             if let Some(skill) = skill {
-                (skill.modifier.attack)(*level, &mut bonus_attack, base_attack);
+                (skill.modifier.attack)(*level, &mut bonus_attack, self.weapon);
                 (skill.modifier.affinity)(*level, &mut bonus_affinity);
             } else {
                 // Printing this now causes runtime to go from roughly 0.03 s to over 100 s due to
@@ -65,8 +65,8 @@ impl<'a> Set<'a> {
         let effective_sharpness = EffectiveSharpness::new(&self.weapon.sharpness);
         let total_raw_sharpness_mod = effective_sharpness.get_avg_raw_sharpness_mod();
 
-        let total_attack = base_attack + bonus_attack;
-        let total_affinity = base_affinity + bonus_affinity;
+        let total_attack = f64::from(base_attack) + bonus_attack;
+        let total_affinity = f64::from(base_affinity) + bonus_affinity;
 
         Hunter {
             set: self,
@@ -111,11 +111,11 @@ impl<'a> Set<'a> {
 pub struct Hunter<'a> {
     pub set: Set<'a>,
     pub base_attack: u16,
-    pub bonus_attack: u16,
-    pub total_attack: u16,
+    pub bonus_attack: f64,
+    pub total_attack: f64,
     pub base_affinity: i16,
-    pub bonus_affinity: i16,
-    pub total_affinity: i16,
+    pub bonus_affinity: f64,
+    pub total_affinity: f64,
     pub effective_sharpness: EffectiveSharpness,
     pub total_raw_sharpness_mod: f64,
     pub effective_raw: f64,

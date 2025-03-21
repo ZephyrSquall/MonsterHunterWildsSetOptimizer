@@ -13,6 +13,7 @@ pub struct Weapon {
     slots: &'static [u8],
     defense: u16,
     pub skills: &'static [(SkillId, u8)],
+    pub weapon_type: WeaponType,
 }
 
 // The weapon's element or status. If not None, the enum also holds the base elemental/status attack
@@ -156,3 +157,20 @@ const MOD_SHARPNESS_ELEMENT_YELLOW: f64 = 0.75;
 const MOD_SHARPNESS_ELEMENT_GREEN: f64 = 1.00;
 const MOD_SHARPNESS_ELEMENT_BLUE: f64 = 1.063;
 const MOD_SHARPNESS_ELEMENT_WHITE: f64 = 1.15;
+
+pub enum WeaponType {
+    GreatSword,
+    LongSword,
+    SwordAndShield,
+    DualBlades,
+    Hammer,
+    HuntingHorn,
+    Lance,
+    Gunlance,
+    SwitchAxe,
+    ChargeBlade,
+    InsectGlaive,
+    LightBowgun,
+    HeavyBowgun,
+    Bow,
+}
