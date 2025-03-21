@@ -49,6 +49,18 @@ pub enum SkillType {
     Group,
 }
 
+pub struct SkillAmount {
+    pub skill: &'static Skill,
+    pub level: u8,
+}
+impl SkillAmount {
+    // Using this constructor in const expressions allows for SkillAmounts to be defined in one
+    // line, reducing verbosity.
+    pub const fn new(skill: &'static Skill, level: u8) -> SkillAmount {
+        SkillAmount { skill, level }
+    }
+}
+
 #[derive(PartialEq)]
 pub enum SkillId {
     // Weapon skills

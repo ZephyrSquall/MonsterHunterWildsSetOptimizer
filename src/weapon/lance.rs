@@ -1,4 +1,9 @@
-use crate::skill::SkillId;
+use crate::skill::SkillAmount;
+use crate::skill::weapon_skill::{
+    AIRBORNE, ATTACK_BOOST, CRITICAL_BOOST, CRITICAL_DRAW, CRITICAL_ELEMENT, CRITICAL_EYE,
+    CRITICAL_STATUS, GUARD, GUARD_UP, MASTERS_TOUCH, OFFENSIVE_GUARD, PUNISHING_DRAW,
+    SPEED_SHARPENING,
+};
 use crate::weapon::{Element, Sharpness, Weapon, WeaponType};
 
 pub const LANCES: [Weapon; 20] = [
@@ -19,7 +24,10 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 0,
-        skills: &[(SkillId::CriticalEye, 2), (SkillId::SpeedSharpening, 2)],
+        skills: &[
+            SkillAmount::new(&CRITICAL_EYE, 2),
+            SkillAmount::new(&SPEED_SHARPENING, 2),
+        ],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -39,7 +47,10 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 0,
-        skills: &[(SkillId::CriticalElement, 1), (SkillId::MastersTouch, 1)],
+        skills: &[
+            SkillAmount::new(&CRITICAL_ELEMENT, 1),
+            SkillAmount::new(&MASTERS_TOUCH, 1),
+        ],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -59,7 +70,7 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 0,
-        skills: &[(SkillId::OffensiveGuard, 3)],
+        skills: &[SkillAmount::new(&OFFENSIVE_GUARD, 3)],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -84,7 +95,10 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 0,
-        skills: &[(SkillId::Guard, 2), (SkillId::OffensiveGuard, 1)],
+        skills: &[
+            SkillAmount::new(&GUARD, 2),
+            SkillAmount::new(&OFFENSIVE_GUARD, 1),
+        ],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -104,7 +118,7 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 0,
-        skills: &[(SkillId::GuardUp, 3)],
+        skills: &[SkillAmount::new(&GUARD_UP, 3)],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -124,7 +138,7 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 0,
-        skills: &[(SkillId::GuardUp, 3)],
+        skills: &[SkillAmount::new(&GUARD_UP, 3)],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -144,7 +158,7 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 0,
-        skills: &[(SkillId::OffensiveGuard, 3)],
+        skills: &[SkillAmount::new(&OFFENSIVE_GUARD, 3)],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -164,7 +178,10 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 0,
-        skills: &[(SkillId::GuardUp, 3), (SkillId::AttackBoost, 1)],
+        skills: &[
+            SkillAmount::new(&GUARD_UP, 3),
+            SkillAmount::new(&ATTACK_BOOST, 1),
+        ],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -184,7 +201,7 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 0,
-        skills: &[(SkillId::Guard, 3), (SkillId::Airborne, 1)],
+        skills: &[SkillAmount::new(&GUARD, 3), SkillAmount::new(&AIRBORNE, 1)],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -204,7 +221,7 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 0,
-        skills: &[(SkillId::OffensiveGuard, 3)],
+        skills: &[SkillAmount::new(&OFFENSIVE_GUARD, 3)],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -224,7 +241,7 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 0,
-        skills: &[(SkillId::Guard, 3)],
+        skills: &[SkillAmount::new(&GUARD, 3)],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -244,7 +261,7 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 20,
-        skills: &[(SkillId::PunishingDraw, 3)],
+        skills: &[SkillAmount::new(&PUNISHING_DRAW, 3)],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -264,7 +281,7 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 3, 1],
         defense: 0,
-        skills: &[(SkillId::Guard, 2)],
+        skills: &[SkillAmount::new(&GUARD, 2)],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -284,7 +301,7 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 0,
-        skills: &[(SkillId::Guard, 3)],
+        skills: &[SkillAmount::new(&GUARD, 3)],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -304,7 +321,7 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 0,
-        skills: &[(SkillId::OffensiveGuard, 3)],
+        skills: &[SkillAmount::new(&OFFENSIVE_GUARD, 3)],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -324,7 +341,10 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 0,
-        skills: &[(SkillId::CriticalDraw, 2), (SkillId::CriticalStatus, 1)],
+        skills: &[
+            SkillAmount::new(&CRITICAL_DRAW, 2),
+            SkillAmount::new(&CRITICAL_STATUS, 1),
+        ],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -344,7 +364,7 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 0,
-        skills: &[(SkillId::CriticalBoost, 3)],
+        skills: &[SkillAmount::new(&CRITICAL_BOOST, 3)],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -364,7 +384,7 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 0,
-        skills: &[(SkillId::CriticalElement, 2)],
+        skills: &[SkillAmount::new(&CRITICAL_ELEMENT, 3)],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -384,7 +404,7 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 30,
-        skills: &[(SkillId::GuardUp, 3)],
+        skills: &[SkillAmount::new(&GUARD_UP, 3)],
         weapon_type: WeaponType::Lance,
     },
     Weapon {
@@ -404,7 +424,10 @@ pub const LANCES: [Weapon; 20] = [
         },
         slots: &[3, 2, 1],
         defense: 0,
-        skills: &[(SkillId::CriticalDraw, 3), (SkillId::Guard, 1)],
+        skills: &[
+            SkillAmount::new(&CRITICAL_DRAW, 3),
+            SkillAmount::new(&GUARD, 1),
+        ],
         weapon_type: WeaponType::Lance,
     },
 ];

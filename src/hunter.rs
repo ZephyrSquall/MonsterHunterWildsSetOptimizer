@@ -1,6 +1,5 @@
 use crate::armor::{Armor, Talisman};
-use crate::skill::SkillId;
-use crate::skill::weapon_skill::WEAPON_SKILLS;
+use crate::skill::SkillAmount;
 use crate::weapon::{EffectiveSharpness, Weapon};
 
 pub struct Set<'a> {
@@ -13,7 +12,7 @@ pub struct Set<'a> {
     pub talisman: &'a Talisman,
 }
 impl<'a> Set<'a> {
-    fn get_skills(&self) -> Vec<&(SkillId, u8)> {
+    fn get_skills(&self) -> Vec<&SkillAmount> {
         // 10 capacity is just an arbitrary choice; I may experiment to find the capacity that gives
         // the best performance later, or figure out the theoretical maximum number of unique skills
         // that can be on a set and use that for capacity.
@@ -26,9 +25,11 @@ impl<'a> Set<'a> {
         for skill in self.weapon.skills {
             skills.push(skill);
         }
-        for skill in self.head.skills {
-            skills.push(skill);
-        }
+
+        // This is commented out for now until I implement armor skills.
+        // for skill in self.head.skills {
+        //     skills.push(skill);
+        // }
 
         // TODO: If any skill went over its maximum, reduce it to its maximum.
 
@@ -42,24 +43,13 @@ impl<'a> Set<'a> {
         let mut bonus_attack = 0.0;
         let mut bonus_affinity = 0.0;
 
-        for (skill_id, level) in self.get_skills() {
-            let mut skill = None;
-            for weapon_skill in WEAPON_SKILLS {
-                if weapon_skill.id == *skill_id {
-                    skill = Some(weapon_skill);
-                }
-            }
-
-            if let Some(skill) = skill {
-                (skill.modifier.attack)(*level, &mut bonus_attack, self.weapon);
-                (skill.modifier.affinity)(*level, &mut bonus_affinity);
-            } else {
-                // Printing this now causes runtime to go from roughly 0.03 s to over 100 s due to
-                // the vast number of times it is printed. It is commented out for now, but should
-                // be uncommented when skills are properly implemented to check for missed skill
-                // implementations.
-                //eprintln!("Skill not found");
-            }
+        for skill_amount in self.get_skills() {
+            (skill_amount.skill.modifier.attack)(
+                skill_amount.level,
+                &mut bonus_attack,
+                self.weapon,
+            );
+            (skill_amount.skill.modifier.affinity)(skill_amount.level, &mut bonus_affinity);
         }
 
         let effective_sharpness = EffectiveSharpness::new(&self.weapon.sharpness);
@@ -79,8 +69,8 @@ impl<'a> Set<'a> {
             effective_sharpness,
             total_raw_sharpness_mod,
             // TODO: Handle negative affinity, over 100% affinity, and crit boost.
-            effective_raw: f64::from(total_attack)
-                * (1.0 + 1.25 * f64::from(total_affinity) / 100.0)
+            effective_raw: total_attack
+                * (1.0 + 1.25 * total_affinity / 100.0)
                 * total_raw_sharpness_mod,
         }
     }
@@ -120,7 +110,7 @@ pub struct Hunter<'a> {
     pub total_raw_sharpness_mod: f64,
     pub effective_raw: f64,
 }
-impl<'a> Hunter<'a> {
+impl Hunter<'_> {
     pub fn print_summary(&self) {
         println!("Effective raw: {}", self.effective_raw);
     }

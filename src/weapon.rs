@@ -1,5 +1,5 @@
 use crate::config::HITS_BEFORE_SHARPENING;
-use crate::skill::SkillId;
+use crate::skill::SkillAmount;
 
 pub mod lance;
 
@@ -12,7 +12,7 @@ pub struct Weapon {
     pub sharpness: Sharpness,
     slots: &'static [u8],
     defense: u16,
-    pub skills: &'static [(SkillId, u8)],
+    pub skills: &'static [SkillAmount],
     pub weapon_type: WeaponType,
 }
 
