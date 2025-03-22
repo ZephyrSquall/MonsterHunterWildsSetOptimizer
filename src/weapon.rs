@@ -8,7 +8,7 @@ pub struct Weapon {
     tree: &'static str,
     pub attack: u16,
     pub affinity: i16,
-    element: Element,
+    pub element: Element,
     pub sharpness: Sharpness,
     slots: &'static [u8],
     defense: u16,
@@ -74,7 +74,7 @@ pub struct EffectiveSharpness {
     white: f64,
 }
 impl EffectiveSharpness {
-    // TODO: Add parameters for Handicraft, Razor Sharp, and Master's Touch.
+    // TODO: Add parameters for Handicraft, Razor Sharp, Master's Touch, and Protective Polish.
     // Calculate effective sharpness from a weapon's inherent sharpness.
     pub fn new(sharpness: &Sharpness) -> EffectiveSharpness {
         let mut red_after_handicraft = sharpness.red;
@@ -115,6 +115,8 @@ impl EffectiveSharpness {
             blue: f64::from(blue_after_handicraft),
             white: f64::from(white_after_handicraft),
         }
+
+        // TODO: extend the highest sharpness level according to the player's Protective Polish.
     }
 
     // Calculates the overall raw sharpness modifier the player experiences by considering how many
