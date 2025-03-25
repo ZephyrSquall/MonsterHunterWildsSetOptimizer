@@ -22,6 +22,15 @@ pub const AIRBORNE: Skill = Skill {
     },
 };
 
+pub const ARTILLERY: Skill = Skill {
+    name: "Artillery",
+    alt_name: None,
+    id: SkillId::Artillery,
+    skill_type: SkillType::Weapon,
+    max: 3,
+    modifier: Modifier { ..DEFAULT_MODIFIER },
+};
+
 pub const ATTACK_BOOST: Skill = Skill {
     name: "Attack Boost",
     alt_name: None,
@@ -73,6 +82,15 @@ pub const BLAST_ATTACK: Skill = Skill {
     },
 };
 
+pub const BLAST_FUNCTIONALITY: Skill = Skill {
+    name: "Blast Functionality",
+    alt_name: None,
+    id: SkillId::BlastFunctionality,
+    skill_type: SkillType::Weapon,
+    max: 1,
+    modifier: Modifier { ..DEFAULT_MODIFIER },
+};
+
 pub const BLUDGEONER: Skill = Skill {
     name: "Bludgeoner",
     alt_name: None,
@@ -88,6 +106,15 @@ pub const CHARGE_MASTER: Skill = Skill {
     id: SkillId::ChargeMaster,
     skill_type: SkillType::Weapon,
     max: 3,
+    modifier: Modifier { ..DEFAULT_MODIFIER },
+};
+
+pub const CHARGE_UP: Skill = Skill {
+    name: "Charge Up",
+    alt_name: None,
+    id: SkillId::ChargeUp,
+    skill_type: SkillType::Weapon,
+    max: 1,
     modifier: Modifier { ..DEFAULT_MODIFIER },
 };
 
@@ -203,6 +230,15 @@ pub const DRAGON_ATTACK: Skill = Skill {
     },
 };
 
+pub const EXHAUST_FUNCTIONALITY: Skill = Skill {
+    name: "Exhaust Functionality",
+    alt_name: None,
+    id: SkillId::ExhaustFunctionality,
+    skill_type: SkillType::Weapon,
+    max: 1,
+    modifier: Modifier { ..DEFAULT_MODIFIER },
+};
+
 pub const FIRE_ATTACK: Skill = Skill {
     name: "Fire Attack",
     alt_name: None,
@@ -263,6 +299,15 @@ pub const HANDICRAFT: Skill = Skill {
     modifier: Modifier { ..DEFAULT_MODIFIER },
 };
 
+pub const HORN_MAESTRO: Skill = Skill {
+    name: "Horn Maestro",
+    alt_name: None,
+    id: SkillId::HornMaestro,
+    skill_type: SkillType::Weapon,
+    max: 2,
+    modifier: Modifier { ..DEFAULT_MODIFIER },
+};
+
 pub const ICE_ATTACK: Skill = Skill {
     name: "Ice Attack",
     alt_name: None,
@@ -283,6 +328,15 @@ pub const ICE_ATTACK: Skill = Skill {
         },
         ..DEFAULT_MODIFIER
     },
+};
+
+pub const LOAD_SHELLS: Skill = Skill {
+    name: "Load Shells",
+    alt_name: None,
+    id: SkillId::LoadShells,
+    skill_type: SkillType::Weapon,
+    max: 2,
+    modifier: Modifier { ..DEFAULT_MODIFIER },
 };
 
 pub const MASTERS_TOUCH: Skill = Skill {
@@ -340,6 +394,15 @@ pub const OPENING_SHOT: Skill = Skill {
     modifier: Modifier { ..DEFAULT_MODIFIER },
 };
 
+pub const PARA_FUNCTIONALITY: Skill = Skill {
+    name: "Para Functionality",
+    alt_name: None,
+    id: SkillId::ParaFunctionality,
+    skill_type: SkillType::Weapon,
+    max: 1,
+    modifier: Modifier { ..DEFAULT_MODIFIER },
+};
+
 pub const PARALYSIS_ATTACK: Skill = Skill {
     name: "Paralysis Attack",
     alt_name: None,
@@ -391,6 +454,24 @@ pub const POISON_ATTACK: Skill = Skill {
         },
         ..DEFAULT_MODIFIER
     },
+};
+
+pub const POISON_DURATION_UP: Skill = Skill {
+    name: "Poison Duration Up",
+    alt_name: None,
+    id: SkillId::PoisonDurationUp,
+    skill_type: SkillType::Weapon,
+    max: 1,
+    modifier: Modifier { ..DEFAULT_MODIFIER },
+};
+
+pub const POISON_FUNCTIONALITY: Skill = Skill {
+    name: "Poison Functionality",
+    alt_name: None,
+    id: SkillId::PoisonFunctionality,
+    skill_type: SkillType::Weapon,
+    max: 1,
+    modifier: Modifier { ..DEFAULT_MODIFIER },
 };
 
 pub const POWER_PROLONGER: Skill = Skill {
@@ -484,12 +565,30 @@ pub const SLEEP_ATTACK: Skill = Skill {
     },
 };
 
+pub const SLEEP_FUNCTIONALITY: Skill = Skill {
+    name: "Sleep Functionality",
+    alt_name: None,
+    id: SkillId::SleepFunctionality,
+    skill_type: SkillType::Weapon,
+    max: 1,
+    modifier: Modifier { ..DEFAULT_MODIFIER },
+};
+
 pub const SLUGGER: Skill = Skill {
     name: "Slugger",
     alt_name: None,
     id: SkillId::Slugger,
     skill_type: SkillType::Weapon,
     max: 3,
+    modifier: Modifier { ..DEFAULT_MODIFIER },
+};
+
+pub const SPECIAL_AMMO_BOOST: Skill = Skill {
+    name: "Special Ammo Boost",
+    alt_name: None,
+    id: SkillId::SpecialAmmoBoost,
+    skill_type: SkillType::Weapon,
+    max: 2,
     modifier: Modifier { ..DEFAULT_MODIFIER },
 };
 
@@ -508,6 +607,15 @@ pub const SPREAD_POWER_SHOTS: Skill = Skill {
     id: SkillId::SpreadPowerShots,
     skill_type: SkillType::Weapon,
     max: 1,
+    modifier: Modifier { ..DEFAULT_MODIFIER },
+};
+
+pub const STAMINA_THIEF: Skill = Skill {
+    name: "Stamina Thief",
+    alt_name: None,
+    id: SkillId::StaminaThief,
+    skill_type: SkillType::Weapon,
+    max: 3,
     modifier: Modifier { ..DEFAULT_MODIFIER },
 };
 
