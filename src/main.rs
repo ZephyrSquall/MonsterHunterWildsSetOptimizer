@@ -4,6 +4,7 @@ use crate::armor::head::HEAD_ARMORS;
 use crate::armor::legs::LEGS_ARMORS;
 use crate::armor::talisman::TALISMANS;
 use crate::armor::waist::WAIST_ARMORS;
+use crate::decoration::get_weapon_decoration_pools;
 use crate::hunter::Set;
 use crate::weapon::lance::LANCES;
 use itertools::iproduct;
@@ -17,6 +18,9 @@ mod skill;
 mod weapon;
 
 fn main() {
+    let (size_one_weapon_decorations, size_two_weapon_decorations, size_three_weapon_decorations) =
+        get_weapon_decoration_pools();
+
     let mut sets_checked: u64 = 0;
     let mut highest_effective_raw_hunter = None;
     let mut highest_effective_raw = f64::MIN;
@@ -41,7 +45,11 @@ fn main() {
             talisman,
         };
 
-        let hunter = set.get_hunter();
+        let hunter = set.get_hunter(
+            &size_one_weapon_decorations,
+            &size_two_weapon_decorations,
+            &size_three_weapon_decorations,
+        );
         if hunter.effective_raw > highest_effective_raw {
             highest_effective_raw = hunter.effective_raw;
             highest_effective_raw_hunter = Some(hunter);
@@ -61,6 +69,8 @@ fn main() {
             highest_effective_raw_hunter.total_raw_sharpness_mod
         );
         highest_effective_raw_hunter.set.print();
+        println!("Skills:");
+        highest_effective_raw_hunter.print_skills();
     } else {
         println!("No set found.");
     }

@@ -10,7 +10,7 @@ pub struct Weapon {
     pub affinity: i16,
     pub element: Element,
     pub sharpness: Sharpness,
-    slots: &'static [u8],
+    pub slots: &'static [u8],
     defense: u16,
     pub skills: &'static [SkillAmount],
     pub weapon_type: WeaponType,
