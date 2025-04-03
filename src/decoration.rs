@@ -1,6 +1,5 @@
 use crate::decoration::weapon_decoration::ALL_WEAPON_DECORATIONS;
 use crate::skill::{SkillAmount, SkillId};
-use std::fmt;
 
 mod weapon_decoration;
 
@@ -8,11 +7,6 @@ pub struct Decoration {
     pub name: &'static str,
     pub size: u8,
     pub skills: &'static [SkillAmount],
-}
-impl fmt::Debug for Decoration {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Decoration {}", self.name)
-    }
 }
 
 pub fn get_weapon_decoration_pools() -> (

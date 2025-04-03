@@ -5,7 +5,7 @@ pub mod lance;
 
 pub struct Weapon {
     pub name: &'static str,
-    tree: &'static str,
+    pub tree: &'static str,
     pub attack: u16,
     pub affinity: i16,
     pub element: Element,
@@ -13,7 +13,7 @@ pub struct Weapon {
     pub three_slots: u8,
     pub two_slots: u8,
     pub one_slots: u8,
-    defense: u16,
+    pub defense: u16,
     pub skills: &'static [SkillAmount],
     pub weapon_type: WeaponType,
 }

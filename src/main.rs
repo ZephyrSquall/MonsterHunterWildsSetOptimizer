@@ -24,13 +24,13 @@ fn main() {
         get_weapon_decoration_pools();
 
     let set_iter = iproduct!(
-        &LANCES,
-        &HEAD_ARMORS,
-        &CHEST_ARMORS,
-        &ARMS_ARMORS,
-        &WAIST_ARMORS,
-        &LEGS_ARMORS,
-        &TALISMANS,
+        LANCES,
+        HEAD_ARMORS,
+        CHEST_ARMORS,
+        ARMS_ARMORS,
+        WAIST_ARMORS,
+        LEGS_ARMORS,
+        TALISMANS,
     );
 
     let sets_checked = set_iter.clone().count();

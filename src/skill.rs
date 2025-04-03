@@ -1,5 +1,8 @@
 use crate::weapon::Weapon;
 
+pub mod armor_skill;
+pub mod group_skill;
+pub mod set_bonus_skill;
 pub mod weapon_skill;
 
 pub struct Skill {
@@ -8,7 +11,7 @@ pub struct Skill {
     // granted if enough of the Set Bonus or Group pieces are equipped. e.g. "Gore Magala's Tyranny"
     // is the name, "Black Eclipse" (without the "I" or "II") is the alt_name. For Weapon and Armor
     // skills, alt_name is None.
-    alt_name: Option<&'static str>,
+    pub alt_name: Option<&'static str>,
     pub id: SkillId,
     skill_type: SkillType,
     max: u8,
