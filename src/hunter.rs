@@ -29,25 +29,15 @@ impl<'a> Set<'a> {
 
     pub fn get_hunter(
         self,
-        size_one_weapon_decorations: &[&Decoration],
-        size_two_weapon_decorations: &[&Decoration],
-        size_three_weapon_decorations: &[&Decoration],
+        size_one_weapon_decorations: &[&'static Decoration],
+        size_two_weapon_decorations: &[&'static Decoration],
+        size_three_weapon_decorations: &[&'static Decoration],
     ) -> Hunter<'a> {
         let base_attack = self.weapon.attack;
         let base_affinity = self.weapon.affinity;
 
-        let mut bonus_attack = 0.0;
-        let mut bonus_affinity = 0.0;
-
-        let mut base_skills = self.get_skills();
-        for skill_amount in &base_skills {
-            (skill_amount.skill.modifier.attack)(
-                skill_amount.level,
-                &mut bonus_attack,
-                self.weapon,
-            );
-            (skill_amount.skill.modifier.affinity)(skill_amount.level, &mut bonus_affinity);
-        }
+        let base_skills = self.get_skills();
+        let mut highest_efr_hunter = None;
 
         let one_slots = self.weapon.slots.iter().filter(|&slot| *slot == 1).count();
         let two_slots = self.weapon.slots.iter().filter(|&slot| *slot == 2).count();
@@ -73,40 +63,80 @@ impl<'a> Set<'a> {
         .into_iter()
         .multi_cartesian_product()
         {
+            let mut decoration_combination_skills = base_skills.clone();
+            let mut decorations = Vec::with_capacity(3);
             for decoration in decoration_combination.iter().flatten() {
                 for skill_amount in decoration.skills {
-                    // TODO: Calculate the total skills for this combination of weapon decorations,
-                    // and the resulting damage output, then record this combination of weapon
-                    // decorations if the damage output is the highest found yet. For now, to test
-                    // that this works, the skills are simply added to the base skills of the armor,
-                    // which will inevitably max out any skills found on decorations in the weapon
-                    // decoration pools.
-                    skill_amount.add_to(&mut base_skills);
+                    skill_amount.add_to(&mut decoration_combination_skills);
                 }
+                // Here, "decoration" is a triple reference - a reference from the
+                // decoration_combination vector to a reference in one of the
+                // n_slot_decoration_combinations vectors to a reference to a Decoration. We want a
+                // copy of the reference to a Decoration, a single reference, so deference and then
+                // clone to strip away the first two layers of the triple reference.
+                decorations.push(*decoration.clone());
+            }
+
+            let mut bonus_attack = 0.0;
+            let mut bonus_affinity = 0.0;
+            for skill_amount in &decoration_combination_skills {
+                (skill_amount.skill.modifier.attack)(
+                    skill_amount.level,
+                    &mut bonus_attack,
+                    self.weapon,
+                );
+                (skill_amount.skill.modifier.affinity)(skill_amount.level, &mut bonus_affinity);
+            }
+
+            let effective_sharpness = EffectiveSharpness::new(&self.weapon.sharpness);
+            let total_raw_sharpness_mod = effective_sharpness.get_avg_raw_sharpness_mod();
+
+            let total_attack = f64::from(base_attack) + bonus_attack;
+            let total_affinity = f64::from(base_affinity) + bonus_affinity;
+
+            // TODO: Handle negative affinity, over 100% affinity, and crit boost.
+            let effective_raw =
+                total_attack * (1.0 + 1.25 * total_affinity / 100.0) * total_raw_sharpness_mod;
+
+            if highest_efr_hunter
+                .as_ref()
+                .is_none_or(|highest_efr_hunter: &HunterStats| {
+                    effective_raw > highest_efr_hunter.effective_raw
+                })
+            {
+                highest_efr_hunter = Some(HunterStats {
+                    skills: decoration_combination_skills,
+                    decorations,
+                    base_attack,
+                    bonus_attack,
+                    total_attack,
+                    base_affinity,
+                    bonus_affinity,
+                    total_affinity,
+                    effective_sharpness,
+                    total_raw_sharpness_mod,
+                    effective_raw,
+                });
             }
         }
 
-        let effective_sharpness = EffectiveSharpness::new(&self.weapon.sharpness);
-        let total_raw_sharpness_mod = effective_sharpness.get_avg_raw_sharpness_mod();
-
-        let total_attack = f64::from(base_attack) + bonus_attack;
-        let total_affinity = f64::from(base_affinity) + bonus_affinity;
-
-        Hunter {
-            set: self,
-            skills: base_skills,
-            base_attack,
-            bonus_attack,
-            total_attack,
-            base_affinity,
-            bonus_affinity,
-            total_affinity,
-            effective_sharpness,
-            total_raw_sharpness_mod,
-            // TODO: Handle negative affinity, over 100% affinity, and crit boost.
-            effective_raw: total_attack
-                * (1.0 + 1.25 * total_affinity / 100.0)
-                * total_raw_sharpness_mod,
+        if let Some(highest_efr_hunter) = highest_efr_hunter {
+            Hunter {
+                set: self,
+                skills: highest_efr_hunter.skills,
+                decorations: highest_efr_hunter.decorations,
+                base_attack: highest_efr_hunter.base_attack,
+                bonus_attack: highest_efr_hunter.bonus_attack,
+                total_attack: highest_efr_hunter.total_attack,
+                base_affinity: highest_efr_hunter.base_affinity,
+                bonus_affinity: highest_efr_hunter.bonus_affinity,
+                total_affinity: highest_efr_hunter.total_affinity,
+                effective_sharpness: highest_efr_hunter.effective_sharpness,
+                total_raw_sharpness_mod: highest_efr_hunter.total_raw_sharpness_mod,
+                effective_raw: highest_efr_hunter.effective_raw,
+            }
+        } else {
+            panic!("No set found");
         }
     }
 
@@ -136,6 +166,7 @@ impl<'a> Set<'a> {
 pub struct Hunter<'a> {
     pub set: Set<'a>,
     pub skills: Vec<SkillAmount>,
+    pub decorations: Vec<&'static Decoration>,
     pub base_attack: u16,
     pub bonus_attack: f64,
     pub total_attack: f64,
@@ -166,4 +197,27 @@ impl Hunter<'_> {
             println!("{} {}", skill_amount.skill.name, skill_amount.level);
         }
     }
+
+    pub fn print_decorations(&self) {
+        for decoration in &self.decorations {
+            println!("{}", decoration.name);
+        }
+    }
+}
+
+// Hunter without the set information. Used to compare stats between possible skill combinations
+// before the highest-damage set is found and the set is moved into it, as the set itself can only
+// be moved once.
+pub struct HunterStats {
+    pub skills: Vec<SkillAmount>,
+    pub decorations: Vec<&'static Decoration>,
+    pub base_attack: u16,
+    pub bonus_attack: f64,
+    pub total_attack: f64,
+    pub base_affinity: i16,
+    pub bonus_affinity: f64,
+    pub total_affinity: f64,
+    pub effective_sharpness: EffectiveSharpness,
+    pub total_raw_sharpness_mod: f64,
+    pub effective_raw: f64,
 }

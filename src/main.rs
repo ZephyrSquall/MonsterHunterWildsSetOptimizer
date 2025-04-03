@@ -59,9 +59,9 @@ fn main() {
                 &size_three_weapon_decorations,
             );
 
-            // Get a read lock to check if the set found so far is the highest damage set found so
-            // far (or is a None, which means the set found is the first set and is trivially the
-            // highest damage set found so far). If so, get the write lock to update it.
+            // Get a read lock to check if the set found is the highest damage set found so far (or
+            // is a None, which means the set found is the first set and is trivially the highest
+            // damage set found so far). If so, get the write lock to update it.
             let highest_efr_hunter = highest_efr_hunter_lock.read().unwrap();
             if highest_efr_hunter
                 .as_ref()
@@ -93,6 +93,8 @@ fn main() {
             highest_efr_hunter.total_raw_sharpness_mod
         );
         highest_efr_hunter.set.print();
+        println!("Decorations:");
+        highest_efr_hunter.print_decorations();
         println!("Skills:");
         highest_efr_hunter.print_skills();
     } else {
