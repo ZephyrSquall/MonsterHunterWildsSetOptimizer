@@ -1,6 +1,6 @@
 use crate::armor::{Armor, Talisman};
 use crate::decoration::Decoration;
-use crate::skill::SkillAmount;
+use crate::skill::{Modifier, SkillAmount};
 use crate::weapon::{EffectiveSharpness, Weapon};
 use itertools::Itertools;
 
@@ -73,22 +73,18 @@ impl<'a> Set<'a> {
                 decorations.push(*decoration.clone());
             }
 
-            let mut bonus_attack = 0.0;
-            let mut bonus_affinity = 0.0;
+            // Apply each skill to obtain all of the modifiers to the player's stats.
+            let mut modifier = Modifier::default();
             for skill_amount in &decoration_combination_skills {
-                (skill_amount.skill.modifier.attack)(
-                    skill_amount.level,
-                    &mut bonus_attack,
-                    self.weapon,
-                );
-                (skill_amount.skill.modifier.affinity)(skill_amount.level, &mut bonus_affinity);
+                (skill_amount.skill.apply)(&mut modifier, skill_amount.level, self.weapon);
             }
 
             let effective_sharpness = EffectiveSharpness::new(&self.weapon.sharpness);
             let total_raw_sharpness_mod = effective_sharpness.get_avg_raw_sharpness_mod();
 
-            let total_attack = f64::from(base_attack) + bonus_attack;
-            let total_affinity = f64::from(base_affinity) + bonus_affinity;
+            let total_attack =
+                f64::from(base_attack) * modifier.attack_multiplier + modifier.bonus_attack;
+            let total_affinity = f64::from(base_affinity) + modifier.bonus_affinity;
 
             // TODO: Handle negative affinity, over 100% affinity, and crit boost.
             let effective_raw =
@@ -104,10 +100,10 @@ impl<'a> Set<'a> {
                     skills: decoration_combination_skills,
                     decorations,
                     base_attack,
-                    bonus_attack,
+                    bonus_attack: modifier.bonus_attack,
                     total_attack,
                     base_affinity,
-                    bonus_affinity,
+                    bonus_affinity: modifier.bonus_affinity,
                     total_affinity,
                     effective_sharpness,
                     total_raw_sharpness_mod,

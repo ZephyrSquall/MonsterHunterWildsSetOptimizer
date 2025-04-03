@@ -12,35 +12,33 @@ pub struct Skill {
     pub id: SkillId,
     skill_type: SkillType,
     max: u8,
-    pub modifier: Modifier,
+    pub apply: fn(modifier: &mut Modifier, level: u8, weapon: &Weapon),
 }
 
 pub struct Modifier {
-    pub attack: fn(level: u8, bonus_attack: &mut f64, weapon: &Weapon),
-    pub affinity: fn(level: u8, bonus_affinity: &mut f64),
-    raw_crit_multiplier: fn(level: u8, bonus_raw_crit_multiplier: &mut f64),
-    element_crit_multiplier:
-        fn(level: u8, bonus_element_crit_multiplier: &mut f64, weapon: &Weapon),
-    status_crit_multiplier: fn(level: u8, bonus_status_crit_multiplier: &mut f64),
-    element: fn(level: u8, bonus_element: &mut f64, weapon: &Weapon),
+    pub attack_multiplier: f64,
+    pub bonus_attack: f64,
+    pub element_multiplier: f64,
+    pub bonus_element: f64,
+    pub bonus_affinity: f64,
+    pub raw_crit_multiplier: f64,
+    pub element_crit_multiplier: f64,
+    pub status_crit_multiplier: f64,
 }
-
-// The default modifiers are simply all no-op functions. Most skills don't affect any given stat, so
-// this simplifies skill definitions by only requiring a function to be explicitly provided for
-// stats that the skill actually modifies. It is assumed that every skill only performs addition or
-// subtraction to the bonus to their stat, and hence modifiers can be applied in any order; as I
-// know is true for all skills in the game currently. For each modifier, the first parameter is the
-// skill level, the second parameter is the bonus to the stat so far and is mutable so it can be
-// modified further, and if needed, the third parameter is a reference to the weapon so the skill
-// can check it to see what to do.
-const DEFAULT_MODIFIER: Modifier = Modifier {
-    attack: |_level, _bonus_attack, _weapon| {},
-    affinity: |_level, _bonus_affinity| {},
-    raw_crit_multiplier: |_level, _bonus_raw_crit_multiplier| {},
-    element_crit_multiplier: |_level, _bonus_element_crit_multiplier, _weapon| {},
-    status_crit_multiplier: |_level, _bonus_status_crit_multiplier| {},
-    element: |_level, _bonus_element, _weapon| {},
-};
+impl Default for Modifier {
+    fn default() -> Self {
+        Modifier {
+            attack_multiplier: 1.0,
+            bonus_attack: 0.0,
+            element_multiplier: 1.0,
+            bonus_element: 0.0,
+            bonus_affinity: 0.0,
+            raw_crit_multiplier: 1.25,
+            element_crit_multiplier: 1.0,
+            status_crit_multiplier: 1.0,
+        }
+    }
+}
 
 pub enum SkillType {
     Weapon,
