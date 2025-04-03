@@ -39,26 +39,22 @@ impl<'a> Set<'a> {
         let base_skills = self.get_skills();
         let mut highest_efr_hunter = None;
 
-        let one_slots = self.weapon.slots.iter().filter(|&slot| *slot == 1).count();
-        let two_slots = self.weapon.slots.iter().filter(|&slot| *slot == 2).count();
-        let three_slots = self.weapon.slots.iter().filter(|&slot| *slot == 3).count();
-
-        let one_slot_decoration_combinations = size_one_weapon_decorations
-            .iter()
-            .combinations_with_replacement(one_slots);
-        let two_slot_decoration_combinations = size_two_weapon_decorations
-            .iter()
-            .combinations_with_replacement(two_slots);
         let three_slot_decoration_combinations = size_three_weapon_decorations
             .iter()
-            .combinations_with_replacement(three_slots);
+            .combinations_with_replacement(self.weapon.three_slots as usize);
+        let two_slot_decoration_combinations = size_two_weapon_decorations
+            .iter()
+            .combinations_with_replacement(self.weapon.two_slots as usize);
+        let one_slot_decoration_combinations = size_one_weapon_decorations
+            .iter()
+            .combinations_with_replacement(self.weapon.one_slots as usize);
 
         // Iterates over every possible combination of weapon decorations from the three weapon
         // decoration pools that fits in this weapon's decoration slots.
         for decoration_combination in [
-            one_slot_decoration_combinations,
-            two_slot_decoration_combinations,
             three_slot_decoration_combinations,
+            two_slot_decoration_combinations,
+            one_slot_decoration_combinations,
         ]
         .into_iter()
         .multi_cartesian_product()
