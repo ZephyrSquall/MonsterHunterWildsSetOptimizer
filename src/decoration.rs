@@ -1,6 +1,7 @@
 use crate::decoration::weapon_decoration::ALL_WEAPON_DECORATIONS;
 use crate::skill::{SkillAmount, SkillId};
 
+pub mod armor_decoration;
 mod weapon_decoration;
 
 pub struct Decoration {

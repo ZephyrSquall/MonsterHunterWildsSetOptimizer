@@ -4,6 +4,7 @@ use crate::armor::head::HEAD_ARMORS;
 use crate::armor::legs::LEGS_ARMORS;
 use crate::armor::talisman::TALISMANS;
 use crate::armor::waist::WAIST_ARMORS;
+use crate::decoration::armor_decoration::ALL_ARMOR_DECORATIONS;
 use crate::decoration::get_weapon_decoration_pools;
 use crate::hunter::Set;
 use crate::weapon::lance::LANCES;
@@ -20,6 +21,10 @@ mod skill;
 mod weapon;
 
 fn main() {
+    for armor_decoration in ALL_ARMOR_DECORATIONS {
+        println!("{}", armor_decoration.name);
+    }
+
     let (size_one_weapon_decorations, size_two_weapon_decorations, size_three_weapon_decorations) =
         get_weapon_decoration_pools();
 
