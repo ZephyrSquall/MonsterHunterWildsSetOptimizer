@@ -136,6 +136,7 @@ pub enum SkillId {
     RazorSharp,
     SleepAttack,
     SleepFunctionality,
+    SlickedBlade,
     Slugger,
     SpecialAmmoBoost,
     SpeedSharpening,
@@ -144,6 +145,7 @@ pub enum SkillId {
     TetradShot,
     ThunderAttack,
     WaterAttack,
+    WhiteflameTorrent,
 
     // Armor skills
     Agitator,

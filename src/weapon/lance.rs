@@ -2,11 +2,11 @@ use crate::skill::SkillAmount;
 use crate::skill::weapon_skill::{
     AIRBORNE, ATTACK_BOOST, CRITICAL_BOOST, CRITICAL_DRAW, CRITICAL_ELEMENT, CRITICAL_EYE,
     CRITICAL_STATUS, GUARD, GUARD_UP, MASTERS_TOUCH, OFFENSIVE_GUARD, PUNISHING_DRAW,
-    SPEED_SHARPENING,
+    SLICKED_BLADE, SPEED_SHARPENING, WHITEFLAME_TORRENT,
 };
 use crate::weapon::{Element, Sharpness, Weapon, WeaponType};
 
-pub const LANCES: [&Weapon; 20] = [
+pub const LANCES: [&Weapon; 22] = [
     &ESPERANZA_LANCE,
     &SHINING_PILLAR,
     &SANDSEA_PRALLAYA,
@@ -27,6 +27,8 @@ pub const LANCES: [&Weapon; 20] = [
     &FIEBERSCHILD,
     &GRAVIOS_LANCE,
     &BABEL_SPEAR,
+    &BLAZING_SITAL,
+    &KIMI_GA_KIRU,
 ];
 
 const ESPERANZA_LANCE: Weapon = Weapon {
@@ -508,6 +510,57 @@ const BABEL_SPEAR: Weapon = Weapon {
     skills: &[
         SkillAmount::new(&CRITICAL_DRAW, 3),
         SkillAmount::new(&GUARD, 1),
+    ],
+    weapon_type: WeaponType::Lance,
+};
+
+const BLAZING_SITAL: Weapon = Weapon {
+    name: "Blazing Sital",
+    tree: "Zoh Shia",
+    attack: 220,
+    affinity: 5,
+    element: Element::Dragon(20),
+    // TODO: Get correct sharpness values
+    sharpness: Sharpness {
+        red: 1,
+        orange: 1,
+        yellow: 1,
+        green: 1,
+        blue: 1,
+        white: 1,
+        handicraft_locked: 1,
+    },
+    three_slots: 1,
+    two_slots: 1,
+    one_slots: 1,
+    defense: 0,
+    skills: &[SkillAmount::new(&WHITEFLAME_TORRENT, 1)],
+    weapon_type: WeaponType::Lance,
+};
+
+const KIMI_GA_KIRU: Weapon = Weapon {
+    name: "Kimi Ga Kiru",
+    tree: "Mizutsune",
+    attack: 210,
+    affinity: 15,
+    element: Element::Water(30),
+    // TODO: Get correct sharpness values
+    sharpness: Sharpness {
+        red: 1,
+        orange: 1,
+        yellow: 1,
+        green: 1,
+        blue: 1,
+        white: 1,
+        handicraft_locked: 1,
+    },
+    three_slots: 1,
+    two_slots: 1,
+    one_slots: 1,
+    defense: 0,
+    skills: &[
+        SkillAmount::new(&SLICKED_BLADE, 3),
+        SkillAmount::new(&CRITICAL_ELEMENT, 1),
     ],
     weapon_type: WeaponType::Lance,
 };

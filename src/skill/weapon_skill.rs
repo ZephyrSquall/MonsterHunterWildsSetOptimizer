@@ -581,6 +581,15 @@ pub const SLEEP_FUNCTIONALITY: Skill = Skill {
     apply: |_modifier, _level, _weapon| {},
 };
 
+pub const SLICKED_BLADE: Skill = Skill {
+    name: "Slicked Blade",
+    alt_name: None,
+    id: SkillId::SlickedBlade,
+    skill_type: SkillType::Weapon,
+    max: 3,
+    apply: |_modifier, _level, _weapon| {},
+};
+
 pub const SLUGGER: Skill = Skill {
     name: "Slugger",
     alt_name: None,
@@ -684,4 +693,13 @@ pub const WATER_ATTACK: Skill = Skill {
             }
         }
     },
+};
+
+pub const WHITEFLAME_TORRENT: Skill = Skill {
+    name: "Whiteflame Torrent",
+    alt_name: None,
+    id: SkillId::WhiteflameTorrent,
+    skill_type: SkillType::Weapon,
+    max: 1,
+    apply: |_modifier, _level, _weapon| {},
 };
