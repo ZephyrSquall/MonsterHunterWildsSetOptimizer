@@ -12,11 +12,17 @@ pub struct Skill {
     // is the name, "Black Eclipse" (without the "I" or "II") is the alt_name. For Weapon and Armor
     // skills, alt_name is None.
     pub alt_name: Option<&'static str>,
-    pub id: SkillId,
+    id: SkillId,
     skill_type: SkillType,
     max: u8,
     pub apply: fn(modifier: &mut Modifier, level: u8, weapon: &Weapon),
 }
+impl PartialEq for Skill {
+    fn eq(&self, other: &Self) -> bool {
+        self.id == other.id
+    }
+}
+impl Eq for Skill {}
 
 pub struct Modifier {
     pub attack_multiplier: f64,
@@ -71,7 +77,7 @@ impl SkillAmount {
         if let Some(matched_skill_amount) = other
             .iter_mut()
             // To check if both SkillAmounts refer to the same skill, check the SkillId.
-            .find(|other_skill_amount| self.skill.id == other_skill_amount.skill.id)
+            .find(|other_skill_amount| self.skill == other_skill_amount.skill)
         {
             // If it does contain the skill, add to its level, making sure it doesn't exceed the max
             // level.
@@ -90,7 +96,7 @@ impl SkillAmount {
 // SkillId is used to compare if two skills are the same. This is needed when calculating the total
 // skill points of an armor set to know when to combine two of the same skill, which makes listing a
 // set's skills neater and helps in ensuring a skill does not exceed its maximum level.
-#[derive(PartialEq)]
+#[derive(PartialEq, Eq)]
 pub enum SkillId {
     // Weapon skills
     Airborne,

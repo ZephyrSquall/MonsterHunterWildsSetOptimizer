@@ -1,7 +1,8 @@
+use crate::decoration::armor_decoration::ALL_ARMOR_DECORATIONS;
 use crate::decoration::weapon_decoration::ALL_WEAPON_DECORATIONS;
-use crate::skill::{SkillAmount, SkillId};
+use crate::skill::{Skill, SkillAmount};
 
-pub mod armor_decoration;
+mod armor_decoration;
 mod weapon_decoration;
 
 pub struct Decoration {
@@ -10,42 +11,35 @@ pub struct Decoration {
     pub skills: &'static [SkillAmount],
 }
 
-pub fn get_weapon_decoration_pools() -> (
-    Vec<&'static Decoration>,
-    Vec<&'static Decoration>,
-    Vec<&'static Decoration>,
-) {
-    // Searching all possible combination of decorations in weapon slots makes the search take too
-    // long. For testing purposes, the full list of decorations is filtered to only include
-    // decorations that contains at least one of a certain set of skills.
-    let decoration_pool: Vec<_> = ALL_WEAPON_DECORATIONS
+pub fn get_decoration_pool(weapon_skills: &[&Skill], armor_skills: &[&Skill]) -> DecorationPool {
+    // Filter down the decorations to only consider decorations that have at least one of the
+    // specified skills. This is important because many skills are useless and searching through all
+    // decoration combinations is the slowest part of checking every set.
+    let weapon_decoration_pool: Vec<_> = ALL_WEAPON_DECORATIONS
         .iter()
         .filter(|&&decoration| {
             decoration.skills.iter().any(|skill_amount| {
-                matches!(
-                    skill_amount.skill.id,
-                    SkillId::AttackBoost | SkillId::CriticalEye | SkillId::CriticalBoost
-                )
+                weapon_skills
+                    .iter()
+                    .any(|&weapon_skill| skill_amount.skill == weapon_skill)
             })
         })
+        // We want another copy of the reference to the Decoration (&Decoration), rather than a new
+        // reference to the reference to the Decoration (&&Decoration).
         .copied()
         .collect();
 
     println!("Filtered weapon decorations:");
-    for decoration in &decoration_pool {
+    for decoration in &weapon_decoration_pool {
         println!("{}", decoration.name);
     }
     println!();
 
     // Divide the decoration pool into three separate decoration pools for each decoration slot
     // size.
-    let size_one_weapon_decorations: Vec<_> = decoration_pool
+    let size_one_weapon_decorations: Vec<_> = weapon_decoration_pool
         .iter()
         .filter(|&&decoration| decoration.size == 1)
-        // Copy the reference to the decoration instead of reusing the reference to the reference to
-        // the decoration. This ensures collections of decorations remain of type &[&Decoration]
-        // (without using .copied, it would otherwise be &[&&Decoration]) which simplifies function
-        // signatures.
         .copied()
         .collect();
 
@@ -56,20 +50,71 @@ pub fn get_weapon_decoration_pools() -> (
     // something so unlikely to be optimal. Hence only two-slot decorations are considered for
     // placement in a two-slot. For the same reasons, only three-slot decorations are considered for
     // placement in a three-slot.
-    let size_two_weapon_decorations: Vec<_> = decoration_pool
+    let size_two_weapon_decorations: Vec<_> = weapon_decoration_pool
         .iter()
         .filter(|&&decoration| decoration.size == 2)
         .copied()
         .collect();
-    let size_three_weapon_decorations: Vec<_> = decoration_pool
+    let size_three_weapon_decorations: Vec<_> = weapon_decoration_pool
         .iter()
         .filter(|&&decoration| decoration.size == 3)
         .copied()
         .collect();
 
-    (
-        size_one_weapon_decorations,
-        size_two_weapon_decorations,
-        size_three_weapon_decorations,
-    )
+    // Repeat the above process for armor decorations.
+    let armor_decoration_pool: Vec<_> = ALL_ARMOR_DECORATIONS
+        .iter()
+        .filter(|&&decoration| {
+            decoration.skills.iter().any(|skill_amount| {
+                armor_skills
+                    .iter()
+                    .any(|&armor_skill| skill_amount.skill == armor_skill)
+            })
+        })
+        .copied()
+        .collect();
+
+    println!("Filtered armor decorations:");
+    for decoration in &armor_decoration_pool {
+        println!("{}", decoration.name);
+    }
+    println!();
+
+    let size_one_armor_decorations: Vec<_> = armor_decoration_pool
+        .iter()
+        .filter(|&&decoration| decoration.size == 1)
+        .copied()
+        .collect();
+
+    // Unlike weapon decorations, the skills provided by armor decorations are completely different
+    // between decoration sizes. For now, I continue to assume larger armor decorations are strictly
+    // better than smaller ones to make testing easier, but this will likely be relaxed later.
+    let size_two_armor_decorations: Vec<_> = armor_decoration_pool
+        .iter()
+        .filter(|&&decoration| decoration.size == 2)
+        .copied()
+        .collect();
+    let size_three_armor_decorations: Vec<_> = armor_decoration_pool
+        .iter()
+        .filter(|&&decoration| decoration.size == 3)
+        .copied()
+        .collect();
+
+    DecorationPool {
+        weapon_three: size_three_weapon_decorations,
+        weapon_two: size_two_weapon_decorations,
+        weapon_one: size_one_weapon_decorations,
+        armor_three: size_three_armor_decorations,
+        armor_two: size_two_armor_decorations,
+        armor_one: size_one_armor_decorations,
+    }
+}
+
+pub struct DecorationPool {
+    pub weapon_three: Vec<&'static Decoration>,
+    pub weapon_two: Vec<&'static Decoration>,
+    pub weapon_one: Vec<&'static Decoration>,
+    pub armor_three: Vec<&'static Decoration>,
+    pub armor_two: Vec<&'static Decoration>,
+    pub armor_one: Vec<&'static Decoration>,
 }

@@ -1,5 +1,5 @@
 use crate::armor::{Armor, Talisman};
-use crate::decoration::Decoration;
+use crate::decoration::{Decoration, DecorationPool};
 use crate::skill::{Modifier, SkillAmount};
 use crate::weapon::{EffectiveSharpness, Weapon};
 use itertools::Itertools;
@@ -27,25 +27,23 @@ impl<'a> Set<'a> {
         skills
     }
 
-    pub fn get_hunter(
-        self,
-        size_one_weapon_decorations: &[&'static Decoration],
-        size_two_weapon_decorations: &[&'static Decoration],
-        size_three_weapon_decorations: &[&'static Decoration],
-    ) -> Hunter<'a> {
+    pub fn get_hunter(self, decoration_pool: &DecorationPool) -> Hunter<'a> {
         let base_attack = self.weapon.attack;
         let base_affinity = self.weapon.affinity;
 
         let base_skills = self.get_skills();
         let mut highest_efr_hunter = None;
 
-        let three_slot_decoration_combinations = size_three_weapon_decorations
+        let three_slot_decoration_combinations = decoration_pool
+            .weapon_three
             .iter()
             .combinations_with_replacement(self.weapon.three_slots as usize);
-        let two_slot_decoration_combinations = size_two_weapon_decorations
+        let two_slot_decoration_combinations = decoration_pool
+            .weapon_two
             .iter()
             .combinations_with_replacement(self.weapon.two_slots as usize);
-        let one_slot_decoration_combinations = size_one_weapon_decorations
+        let one_slot_decoration_combinations = decoration_pool
+            .weapon_one
             .iter()
             .combinations_with_replacement(self.weapon.one_slots as usize);
 

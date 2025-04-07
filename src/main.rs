@@ -4,13 +4,16 @@ use crate::armor::head::HEAD_ARMORS;
 use crate::armor::legs::LEGS_ARMORS;
 use crate::armor::talisman::TALISMANS;
 use crate::armor::waist::WAIST_ARMORS;
-use crate::decoration::armor_decoration::ALL_ARMOR_DECORATIONS;
-use crate::decoration::get_weapon_decoration_pools;
+use crate::decoration::get_decoration_pool;
 use crate::hunter::Set;
 use crate::weapon::lance::LANCES;
 use hunter::Hunter;
 use itertools::iproduct;
 use rayon::prelude::*;
+use skill::{
+    armor_skill::{AGITATOR, ANTIVIRUS, BURST, MAXIMUM_MIGHT, WEAKNESS_EXPLOIT},
+    weapon_skill::{ATTACK_BOOST, CRITICAL_BOOST, CRITICAL_EYE},
+};
 use std::{sync::RwLock, time::Instant};
 
 mod armor;
@@ -21,12 +24,16 @@ mod skill;
 mod weapon;
 
 fn main() {
-    for armor_decoration in ALL_ARMOR_DECORATIONS {
-        println!("{}", armor_decoration.name);
-    }
-
-    let (size_one_weapon_decorations, size_two_weapon_decorations, size_three_weapon_decorations) =
-        get_weapon_decoration_pools();
+    let decoration_pool = get_decoration_pool(
+        &[&ATTACK_BOOST, &CRITICAL_EYE, &CRITICAL_BOOST],
+        &[
+            &AGITATOR,
+            &BURST,
+            &WEAKNESS_EXPLOIT,
+            &MAXIMUM_MIGHT,
+            &ANTIVIRUS,
+        ],
+    );
 
     let set_iter = iproduct!(
         LANCES,
@@ -58,11 +65,7 @@ fn main() {
                 talisman,
             };
 
-            let hunter = set.get_hunter(
-                &size_one_weapon_decorations,
-                &size_two_weapon_decorations,
-                &size_three_weapon_decorations,
-            );
+            let hunter = set.get_hunter(&decoration_pool);
 
             // Get a read lock to check if the set found is the highest damage set found so far (or
             // is a None, which means the set found is the first set and is trivially the highest
