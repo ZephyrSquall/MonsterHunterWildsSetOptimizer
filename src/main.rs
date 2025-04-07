@@ -25,7 +25,7 @@ mod weapon;
 
 fn main() {
     let decoration_pool = get_decoration_pool(
-        &[&ATTACK_BOOST, &CRITICAL_EYE, &CRITICAL_BOOST],
+        &[&CRITICAL_EYE],
         &[
             &AGITATOR,
             &BURST,
