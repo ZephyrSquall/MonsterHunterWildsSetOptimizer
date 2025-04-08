@@ -17,6 +17,18 @@ pub struct Weapon {
     pub skills: &'static [SkillAmount],
     pub weapon_type: WeaponType,
 }
+impl Weapon {
+    pub fn is_elemental(&self) -> bool {
+        matches!(
+            self.element,
+            Element::Fire(_)
+                | Element::Water(_)
+                | Element::Thunder(_)
+                | Element::Ice(_)
+                | Element::Dragon(_)
+        )
+    }
+}
 
 // The weapon's element or status. If not None, the enum also holds the base elemental/status attack
 // value is included. Note that the game bloats elemental values even if the option to turn off

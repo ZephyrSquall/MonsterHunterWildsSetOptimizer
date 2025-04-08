@@ -45,7 +45,7 @@ pub const ATTACK_BOOST: Skill = Skill {
             modifier.attack_multiplier *= 1.04;
             modifier.bonus_attack += 9.0;
         }
-        _ => panic!("Attack Boost above maximum level"),
+        _ => unreachable!("Attack Boost above maximum level"),
     },
 };
 
@@ -80,7 +80,7 @@ pub const BLAST_ATTACK: Skill = Skill {
                     modifier.element_multiplier *= 1.2;
                     modifier.bonus_element += 5.0;
                 }
-                _ => panic!("Blast Attack above maximum level"),
+                _ => unreachable!("Blast Attack above maximum level"),
             }
         }
     },
@@ -214,7 +214,7 @@ pub const DRAGON_ATTACK: Skill = Skill {
                     modifier.element_multiplier *= 1.2;
                     modifier.bonus_element += 6.0;
                 }
-                _ => panic!("Dragon Attack above maximum level"),
+                _ => unreachable!("Dragon Attack above maximum level"),
             }
         }
     },
@@ -249,7 +249,7 @@ pub const FIRE_ATTACK: Skill = Skill {
                     modifier.element_multiplier *= 1.2;
                     modifier.bonus_element += 6.0;
                 }
-                _ => panic!("Fire Attack above maximum level"),
+                _ => unreachable!("Fire Attack above maximum level"),
             }
         }
     },
@@ -320,7 +320,7 @@ pub const ICE_ATTACK: Skill = Skill {
                     modifier.element_multiplier *= 1.2;
                     modifier.bonus_element += 6.0;
                 }
-                _ => panic!("Ice Attack above maximum level"),
+                _ => unreachable!("Ice Attack above maximum level"),
             }
         }
     },
@@ -417,7 +417,7 @@ pub const PARALYSIS_ATTACK: Skill = Skill {
                     modifier.element_multiplier *= 1.2;
                     modifier.bonus_element += 5.0;
                 }
-                _ => panic!("Paralysis Attack above maximum level"),
+                _ => unreachable!("Paralysis Attack above maximum level"),
             }
         }
     },
@@ -454,7 +454,7 @@ pub const POISON_ATTACK: Skill = Skill {
                     modifier.element_multiplier *= 1.2;
                     modifier.bonus_element += 5.0;
                 }
-                _ => panic!("Poison Attack above maximum level"),
+                _ => unreachable!("Poison Attack above maximum level"),
             }
         }
     },
@@ -511,7 +511,7 @@ pub const PUNISHING_DRAW: Skill = Skill {
                 1 => 3.0,
                 2 => 5.0,
                 3 => 7.0,
-                _ => panic!("Punishing Draw above maximum level"),
+                _ => unreachable!("Punishing Draw above maximum level"),
             };
     },
 };
@@ -566,7 +566,7 @@ pub const SLEEP_ATTACK: Skill = Skill {
                     modifier.element_multiplier *= 1.2;
                     modifier.bonus_element += 5.0;
                 }
-                _ => panic!("Sleep Attack above maximum level"),
+                _ => unreachable!("Sleep Attack above maximum level"),
             }
         }
     },
@@ -664,7 +664,7 @@ pub const THUNDER_ATTACK: Skill = Skill {
                     modifier.element_multiplier *= 1.2;
                     modifier.bonus_element += 6.0;
                 }
-                _ => panic!("Thunder Attack above maximum level"),
+                _ => unreachable!("Thunder Attack above maximum level"),
             }
         }
     },
@@ -689,7 +689,7 @@ pub const WATER_ATTACK: Skill = Skill {
                     modifier.element_multiplier *= 1.2;
                     modifier.bonus_element += 6.0;
                 }
-                _ => panic!("Water Attack above maximum level"),
+                _ => unreachable!("Water Attack above maximum level"),
             }
         }
     },

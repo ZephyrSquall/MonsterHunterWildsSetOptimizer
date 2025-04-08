@@ -1,4 +1,11 @@
-use crate::skill::{Skill, SkillId, SkillType};
+use crate::{
+    config::{
+        AGITATOR_UPTIME, BURST_FIVE_HIT_UPTIME, BURST_ONE_HIT_UPTIME, MAXIMUM_MIGHT_UPTIME,
+        WEAKNESS_EXPLOIT_WEAK_POINT_UPTIME, WEAKNESS_EXPLOIT_WOUND_UPTIME,
+    },
+    skill::{Skill, SkillId, SkillType},
+    weapon::WeaponType,
+};
 
 pub const ADAPTABILITY: Skill = Skill {
     name: "Adaptability",
@@ -24,7 +31,30 @@ pub const AGITATOR: Skill = Skill {
     id: SkillId::Agitator,
     skill_type: SkillType::Armor,
     max: 5,
-    apply: |_modifier, _level, _weapon| {},
+    apply: |modifier, level, _weapon| match level {
+        0 => {}
+        1 => {
+            modifier.bonus_attack += 4.0 * AGITATOR_UPTIME;
+            modifier.bonus_affinity += 3.0 * AGITATOR_UPTIME;
+        }
+        2 => {
+            modifier.bonus_attack += 8.0 * AGITATOR_UPTIME;
+            modifier.bonus_affinity += 5.0 * AGITATOR_UPTIME;
+        }
+        3 => {
+            modifier.bonus_attack += 12.0 * AGITATOR_UPTIME;
+            modifier.bonus_affinity += 7.0 * AGITATOR_UPTIME;
+        }
+        4 => {
+            modifier.bonus_attack += 16.0 * AGITATOR_UPTIME;
+            modifier.bonus_affinity += 10.0 * AGITATOR_UPTIME;
+        }
+        5 => {
+            modifier.bonus_attack += 20.0 * AGITATOR_UPTIME;
+            modifier.bonus_affinity += 15.0 * AGITATOR_UPTIME;
+        }
+        _ => unreachable!("Agitator above maximum level"),
+    },
 };
 
 pub const AMBUSH: Skill = Skill {
@@ -123,7 +153,237 @@ pub const BURST: Skill = Skill {
     id: SkillId::Burst,
     skill_type: SkillType::Armor,
     max: 5,
-    apply: |_modifier, _level, _weapon| {},
+    apply: |modifier, level, weapon| {
+        match level {
+            0 => {}
+            1 => match weapon.weapon_type {
+                WeaponType::GreatSword | WeaponType::HuntingHorn => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 10.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            5.0 * BURST_ONE_HIT_UPTIME + 8.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+                WeaponType::LongSword
+                | WeaponType::SwordAndShield
+                | WeaponType::Hammer
+                | WeaponType::Lance
+                | WeaponType::Gunlance
+                | WeaponType::SwitchAxe
+                | WeaponType::ChargeBlade
+                | WeaponType::InsectGlaive => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 8.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            5.0 * BURST_ONE_HIT_UPTIME + 6.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+                WeaponType::DualBlades => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 8.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            3.0 * BURST_ONE_HIT_UPTIME + 4.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+                WeaponType::LightBowgun | WeaponType::HeavyBowgun => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 6.0 * BURST_FIVE_HIT_UPTIME;
+                }
+                WeaponType::Bow => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 6.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            3.0 * BURST_ONE_HIT_UPTIME + 4.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+            },
+            2 => match weapon.weapon_type {
+                WeaponType::GreatSword | WeaponType::HuntingHorn => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 12.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            5.0 * BURST_ONE_HIT_UPTIME + 10.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+                WeaponType::LongSword
+                | WeaponType::SwordAndShield
+                | WeaponType::Hammer
+                | WeaponType::Lance
+                | WeaponType::Gunlance
+                | WeaponType::SwitchAxe
+                | WeaponType::ChargeBlade
+                | WeaponType::InsectGlaive => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 10.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            5.0 * BURST_ONE_HIT_UPTIME + 8.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+                WeaponType::DualBlades => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 10.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            3.0 * BURST_ONE_HIT_UPTIME + 6.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+                WeaponType::LightBowgun | WeaponType::HeavyBowgun => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 7.0 * BURST_FIVE_HIT_UPTIME;
+                }
+                WeaponType::Bow => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 7.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            3.0 * BURST_ONE_HIT_UPTIME + 6.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+            },
+            3 => match weapon.weapon_type {
+                WeaponType::GreatSword | WeaponType::HuntingHorn => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 14.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            5.0 * BURST_ONE_HIT_UPTIME + 12.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+                WeaponType::LongSword
+                | WeaponType::SwordAndShield
+                | WeaponType::Hammer
+                | WeaponType::Lance
+                | WeaponType::Gunlance
+                | WeaponType::SwitchAxe
+                | WeaponType::ChargeBlade
+                | WeaponType::InsectGlaive => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 12.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            5.0 * BURST_ONE_HIT_UPTIME + 10.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+                WeaponType::DualBlades => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 12.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            3.0 * BURST_ONE_HIT_UPTIME + 8.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+                WeaponType::LightBowgun | WeaponType::HeavyBowgun => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 8.0 * BURST_FIVE_HIT_UPTIME;
+                }
+                WeaponType::Bow => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 8.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            3.0 * BURST_ONE_HIT_UPTIME + 8.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+            },
+            4 => match weapon.weapon_type {
+                WeaponType::GreatSword | WeaponType::HuntingHorn => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 16.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            5.0 * BURST_ONE_HIT_UPTIME + 16.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+                WeaponType::LongSword
+                | WeaponType::SwordAndShield
+                | WeaponType::Hammer
+                | WeaponType::Lance
+                | WeaponType::Gunlance
+                | WeaponType::SwitchAxe
+                | WeaponType::ChargeBlade
+                | WeaponType::InsectGlaive => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 15.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            5.0 * BURST_ONE_HIT_UPTIME + 12.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+                WeaponType::DualBlades => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 15.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            3.0 * BURST_ONE_HIT_UPTIME + 10.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+                WeaponType::LightBowgun | WeaponType::HeavyBowgun => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 9.0 * BURST_FIVE_HIT_UPTIME;
+                }
+                WeaponType::Bow => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 9.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            3.0 * BURST_ONE_HIT_UPTIME + 10.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+            },
+            5 => match weapon.weapon_type {
+                WeaponType::GreatSword | WeaponType::HuntingHorn => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 20.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            5.0 * BURST_ONE_HIT_UPTIME + 20.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+                WeaponType::LongSword
+                | WeaponType::SwordAndShield
+                | WeaponType::Hammer
+                | WeaponType::Lance
+                | WeaponType::Gunlance
+                | WeaponType::SwitchAxe
+                | WeaponType::ChargeBlade
+                | WeaponType::InsectGlaive => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 18.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            5.0 * BURST_ONE_HIT_UPTIME + 14.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+                WeaponType::DualBlades => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 18.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            3.0 * BURST_ONE_HIT_UPTIME + 12.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+                WeaponType::LightBowgun | WeaponType::HeavyBowgun => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 10.0 * BURST_FIVE_HIT_UPTIME;
+                }
+                WeaponType::Bow => {
+                    modifier.bonus_attack +=
+                        5.0 * BURST_ONE_HIT_UPTIME + 10.0 * BURST_FIVE_HIT_UPTIME;
+                    if weapon.is_elemental() {
+                        modifier.bonus_element +=
+                            3.0 * BURST_ONE_HIT_UPTIME + 12.0 * BURST_FIVE_HIT_UPTIME;
+                    }
+                }
+            },
+            _ => unreachable!("Burst above maximum level"),
+        };
+    },
 };
 
 pub const CLIFFHANGER: Skill = Skill {
@@ -392,8 +652,14 @@ pub const MAXIMUM_MIGHT: Skill = Skill {
     alt_name: None,
     id: SkillId::MaximumMight,
     skill_type: SkillType::Armor,
-    max: 5,
-    apply: |_modifier, _level, _weapon| {},
+    max: 3,
+    apply: |modifier, level, _weapon| match level {
+        0 => {}
+        1 => modifier.bonus_affinity += 10.0 * MAXIMUM_MIGHT_UPTIME,
+        2 => modifier.bonus_affinity += 20.0 * MAXIMUM_MIGHT_UPTIME,
+        3 => modifier.bonus_affinity += 30.0 * MAXIMUM_MIGHT_UPTIME,
+        _ => unreachable!("Maximum Might above maximum level"),
+    },
 };
 
 pub const MUSHROOMANCER: Skill = Skill {
@@ -600,7 +866,30 @@ pub const WEAKNESS_EXPLOIT: Skill = Skill {
     id: SkillId::WeaknessExploit,
     skill_type: SkillType::Armor,
     max: 5,
-    apply: |_modifier, _level, _weapon| {},
+    apply: |modifier, level, _weapon| match level {
+        0 => {}
+        1 => {
+            modifier.bonus_affinity +=
+                5.0 * WEAKNESS_EXPLOIT_WEAK_POINT_UPTIME + 8.0 * WEAKNESS_EXPLOIT_WOUND_UPTIME;
+        }
+        2 => {
+            modifier.bonus_affinity +=
+                10.0 * WEAKNESS_EXPLOIT_WEAK_POINT_UPTIME + 15.0 * WEAKNESS_EXPLOIT_WOUND_UPTIME;
+        }
+        3 => {
+            modifier.bonus_affinity +=
+                15.0 * WEAKNESS_EXPLOIT_WEAK_POINT_UPTIME + 25.0 * WEAKNESS_EXPLOIT_WOUND_UPTIME;
+        }
+        4 => {
+            modifier.bonus_affinity +=
+                20.0 * WEAKNESS_EXPLOIT_WEAK_POINT_UPTIME + 35.0 * WEAKNESS_EXPLOIT_WOUND_UPTIME;
+        }
+        5 => {
+            modifier.bonus_affinity +=
+                30.0 * WEAKNESS_EXPLOIT_WEAK_POINT_UPTIME + 50.0 * WEAKNESS_EXPLOIT_WOUND_UPTIME;
+        }
+        _ => unreachable!("Weakness Exploit above maximum level"),
+    },
 };
 
 pub const WIDE_RANGE: Skill = Skill {
