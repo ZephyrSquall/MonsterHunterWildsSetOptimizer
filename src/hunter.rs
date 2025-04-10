@@ -1,6 +1,6 @@
 use crate::armor::{Armor, Talisman};
 use crate::decoration::{Decoration, DecorationPool};
-use crate::skill::{Modifier, SkillAmount};
+use crate::skill::{ConditionalAffinity, Modifier, SkillAmount};
 use crate::weapon::{EffectiveSharpness, Weapon};
 use itertools::Itertools;
 
@@ -58,6 +58,49 @@ impl<'a> Set<'a> {
         }
 
         (armor_three_slots, armor_two_slots, armor_one_slots)
+    }
+
+    fn get_critical_and_feeble_hit_proportions(
+        conditional_affinities: Vec<ConditionalAffinity>,
+        total_static_affinity: f64,
+    ) -> (f64, f64) {
+        let mut critical_hit_proportion = 0.0;
+        let mut feeble_hit_proportion = 0.0;
+
+        for conditional_affinity_state in conditional_affinities
+            .into_iter()
+            // Split each ConditionalAffinity into an array of two ConditionalAffinities, with one
+            // element containing the original ConditionalAffinity, and the other element containing
+            // a modified version of the original ConditionalAffinity with 0 affinity and 1 minus
+            // the uptime to represent the proportion of the hunt where the skill is not activated.
+            .map(|conditional_affinity| conditional_affinity.downtime_and_self().into_iter())
+            // Take the cartesian product of the pairs of a ConditionalAffinity and its downtime to
+            // get every possible state of ConditionalAffinities being active or not.
+            .multi_cartesian_product()
+        {
+            let mut state_affinity = total_static_affinity;
+            let mut state_uptime = 1.0;
+            for conditional_affinity in conditional_affinity_state {
+                // Sum up all the affinities (on top of the total static affinity) to get the total
+                // affinity of this state.
+                state_affinity += conditional_affinity.affinity;
+                // Multiply all the uptimes to get the overall proportion of the hunt spent in this
+                // state.
+                state_uptime *= conditional_affinity.uptime;
+            }
+
+            state_affinity = state_affinity.clamp(-100.0, 100.0);
+            if state_affinity >= 0.0 {
+                critical_hit_proportion += state_affinity * state_uptime;
+            } else {
+                feeble_hit_proportion += (-state_affinity) * state_uptime;
+            }
+        }
+
+        (
+            critical_hit_proportion / 100.0,
+            feeble_hit_proportion / 100.0,
+        )
     }
 
     pub fn get_hunter(self, decoration_pool: &DecorationPool) -> Hunter<'a> {
@@ -159,11 +202,26 @@ impl<'a> Set<'a> {
 
             let total_attack =
                 f64::from(base_attack) * modifier.attack_multiplier + modifier.bonus_attack;
-            let total_affinity = f64::from(base_affinity) + modifier.bonus_affinity;
+            let total_static_affinity = f64::from(base_affinity) + modifier.bonus_static_affinity;
 
-            // TODO: Handle negative affinity, over 100% affinity, and crit boost.
-            let effective_raw =
-                total_attack * (1.0 + 1.25 * total_affinity / 100.0) * total_raw_sharpness_mod;
+            // Use the array of conditional affinity bonuses to calculate the overall proportion of
+            // attacks that will be critical hits and feeble hits (negative critical hits). This
+            // properly accounts for affinity that is wasted by going over 100% affinity when too
+            // many conditional affinity skills activate at once. These proportions are expressed as
+            // a probability from 0 to 1, note that this is different from affinity which is
+            // expressed as a percentage from -100 to 100.
+            let (critical_hit_proportion, feeble_hit_proportion) =
+                Set::get_critical_and_feeble_hit_proportions(
+                    modifier.bonus_conditional_affinity,
+                    total_static_affinity,
+                );
+            // Calculate the average multiplier to the hunter's raw attack damage from critical hits
+            // and feeble hits.
+            let raw_critical_multiplier = 1.0
+                + critical_hit_proportion * (modifier.raw_crit_multiplier - 1.0)
+                - 0.25 * feeble_hit_proportion;
+
+            let effective_raw = total_attack * raw_critical_multiplier * total_raw_sharpness_mod;
 
             if highest_efr_hunter
                 .as_ref()
@@ -179,8 +237,10 @@ impl<'a> Set<'a> {
                     bonus_attack: modifier.bonus_attack,
                     total_attack,
                     base_affinity,
-                    bonus_affinity: modifier.bonus_affinity,
-                    total_affinity,
+                    bonus_static_affinity: modifier.bonus_static_affinity,
+                    total_static_affinity,
+                    critical_hit_proportion,
+                    feeble_hit_proportion,
                     effective_sharpness,
                     total_raw_sharpness_mod,
                     effective_raw,
@@ -198,8 +258,10 @@ impl<'a> Set<'a> {
                 bonus_attack: highest_efr_hunter.bonus_attack,
                 total_attack: highest_efr_hunter.total_attack,
                 base_affinity: highest_efr_hunter.base_affinity,
-                bonus_affinity: highest_efr_hunter.bonus_affinity,
-                total_affinity: highest_efr_hunter.total_affinity,
+                bonus_static_affinity: highest_efr_hunter.bonus_static_affinity,
+                total_static_affinity: highest_efr_hunter.total_static_affinity,
+                critical_hit_proportion: highest_efr_hunter.critical_hit_proportion,
+                feeble_hit_proportion: highest_efr_hunter.feeble_hit_proportion,
                 effective_sharpness: highest_efr_hunter.effective_sharpness,
                 total_raw_sharpness_mod: highest_efr_hunter.total_raw_sharpness_mod,
                 effective_raw: highest_efr_hunter.effective_raw,
@@ -241,8 +303,10 @@ pub struct Hunter<'a> {
     pub bonus_attack: f64,
     pub total_attack: f64,
     pub base_affinity: i16,
-    pub bonus_affinity: f64,
-    pub total_affinity: f64,
+    pub bonus_static_affinity: f64,
+    pub total_static_affinity: f64,
+    pub critical_hit_proportion: f64,
+    pub feeble_hit_proportion: f64,
     pub effective_sharpness: EffectiveSharpness,
     pub total_raw_sharpness_mod: f64,
     pub effective_raw: f64,
@@ -257,8 +321,10 @@ impl Hunter<'_> {
         println!("Bonus attack: {}", self.bonus_attack);
         println!("Total attack: {}", self.total_attack);
         println!("Base affinity: {}", self.base_affinity);
-        println!("Bonus affinity: {}", self.bonus_affinity);
-        println!("Total affinity: {}", self.total_affinity);
+        println!("Bonus static affinity: {}", self.bonus_static_affinity);
+        println!("Total static affinity: {}", self.total_static_affinity);
+        println!("Critical hit proportion: {}", self.critical_hit_proportion);
+        println!("Feeble hit proportion: {}", self.feeble_hit_proportion);
         println!("Effective raw: {}", self.effective_raw);
     }
 
@@ -286,8 +352,10 @@ pub struct HunterStats {
     pub bonus_attack: f64,
     pub total_attack: f64,
     pub base_affinity: i16,
-    pub bonus_affinity: f64,
-    pub total_affinity: f64,
+    pub bonus_static_affinity: f64,
+    pub total_static_affinity: f64,
+    pub critical_hit_proportion: f64,
+    pub feeble_hit_proportion: f64,
     pub effective_sharpness: EffectiveSharpness,
     pub total_raw_sharpness_mod: f64,
     pub effective_raw: f64,

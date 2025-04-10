@@ -1,7 +1,7 @@
 use crate::config::{
     AIRBORNE_COVERAGE, CRITICAL_DRAW_AND_PUNISHING_DRAW_COVERAGE, OFFENSIVE_GUARD_UPTIME,
 };
-use crate::skill::{Skill, SkillId, SkillType};
+use crate::skill::{ConditionalAffinity, Skill, SkillId, SkillType};
 use crate::weapon::{Element, WeaponType};
 
 pub const AIRBORNE: Skill = Skill {
@@ -139,9 +139,33 @@ pub const CRITICAL_DRAW: Skill = Skill {
     id: SkillId::CriticalDraw,
     skill_type: SkillType::Weapon,
     max: 3,
-    apply: |modifier, level, _weapon| {
-        modifier.bonus_affinity +=
-            f64::from((level + 1) * 25) * CRITICAL_DRAW_AND_PUNISHING_DRAW_COVERAGE;
+    apply: |modifier, level, _weapon| match level {
+        0 => {}
+        1 => {
+            modifier
+                .bonus_conditional_affinity
+                .push(ConditionalAffinity::new(
+                    50.0,
+                    CRITICAL_DRAW_AND_PUNISHING_DRAW_COVERAGE,
+                ));
+        }
+        2 => {
+            modifier
+                .bonus_conditional_affinity
+                .push(ConditionalAffinity::new(
+                    75.0,
+                    CRITICAL_DRAW_AND_PUNISHING_DRAW_COVERAGE,
+                ));
+        }
+        3 => {
+            modifier
+                .bonus_conditional_affinity
+                .push(ConditionalAffinity::new(
+                    100.0,
+                    CRITICAL_DRAW_AND_PUNISHING_DRAW_COVERAGE,
+                ));
+        }
+        _ => unreachable!("Critical Draw above maximum level"),
     },
 };
 
@@ -181,7 +205,7 @@ pub const CRITICAL_EYE: Skill = Skill {
     id: SkillId::CriticalEye,
     skill_type: SkillType::Weapon,
     max: 5,
-    apply: |modifier, level, _weapon| modifier.bonus_affinity += f64::from(level * 4),
+    apply: |modifier, level, _weapon| modifier.bonus_static_affinity += f64::from(level * 4),
 };
 
 pub const CRITICAL_STATUS: Skill = Skill {

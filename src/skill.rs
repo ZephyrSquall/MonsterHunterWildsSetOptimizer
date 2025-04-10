@@ -29,7 +29,12 @@ pub struct Modifier {
     pub bonus_attack: f64,
     pub element_multiplier: f64,
     pub bonus_element: f64,
-    pub bonus_affinity: f64,
+    pub bonus_static_affinity: f64,
+    // Conditional affinity cannot simply be multiplied with its uptime and summed up with other
+    // conditional affinity, as affinity works differently when its below 0% (Critical Boost,
+    // Critical Element, Critical Status, and Master's Touch stop working) and when its above 100%
+    // (all further affinity has no effect).
+    pub bonus_conditional_affinity: Vec<ConditionalAffinity>,
     pub raw_crit_multiplier: f64,
     pub element_crit_multiplier: f64,
     pub status_crit_multiplier: f64,
@@ -41,11 +46,35 @@ impl Default for Modifier {
             bonus_attack: 0.0,
             element_multiplier: 1.0,
             bonus_element: 0.0,
-            bonus_affinity: 0.0,
+            bonus_static_affinity: 0.0,
+            // TODO: find the maximum number of conditional affinity boosts that a set can have (I
+            // just arbitrarily chose 20 for now).
+            bonus_conditional_affinity: Vec::with_capacity(20),
             raw_crit_multiplier: 1.25,
             element_crit_multiplier: 1.0,
             status_crit_multiplier: 1.0,
         }
+    }
+}
+
+#[derive(Clone)]
+pub struct ConditionalAffinity {
+    pub affinity: f64,
+    pub uptime: f64,
+}
+impl ConditionalAffinity {
+    pub fn new(affinity: f64, uptime: f64) -> ConditionalAffinity {
+        ConditionalAffinity { affinity, uptime }
+    }
+
+    pub fn downtime_and_self(self) -> [ConditionalAffinity; 2] {
+        [
+            ConditionalAffinity {
+                affinity: 0.0,
+                uptime: 1.0 - self.uptime,
+            },
+            self,
+        ]
     }
 }
 

@@ -3,7 +3,7 @@ use crate::{
         AGITATOR_UPTIME, BURST_FIVE_HIT_UPTIME, BURST_ONE_HIT_UPTIME, MAXIMUM_MIGHT_UPTIME,
         WEAKNESS_EXPLOIT_WEAK_POINT_UPTIME, WEAKNESS_EXPLOIT_WOUND_UPTIME,
     },
-    skill::{Skill, SkillId, SkillType},
+    skill::{ConditionalAffinity, Skill, SkillId, SkillType},
     weapon::WeaponType,
 };
 
@@ -35,23 +35,33 @@ pub const AGITATOR: Skill = Skill {
         0 => {}
         1 => {
             modifier.bonus_attack += 4.0 * AGITATOR_UPTIME;
-            modifier.bonus_affinity += 3.0 * AGITATOR_UPTIME;
+            modifier
+                .bonus_conditional_affinity
+                .push(ConditionalAffinity::new(3.0, AGITATOR_UPTIME));
         }
         2 => {
             modifier.bonus_attack += 8.0 * AGITATOR_UPTIME;
-            modifier.bonus_affinity += 5.0 * AGITATOR_UPTIME;
+            modifier
+                .bonus_conditional_affinity
+                .push(ConditionalAffinity::new(5.0, AGITATOR_UPTIME));
         }
         3 => {
             modifier.bonus_attack += 12.0 * AGITATOR_UPTIME;
-            modifier.bonus_affinity += 7.0 * AGITATOR_UPTIME;
+            modifier
+                .bonus_conditional_affinity
+                .push(ConditionalAffinity::new(7.0, AGITATOR_UPTIME));
         }
         4 => {
             modifier.bonus_attack += 16.0 * AGITATOR_UPTIME;
-            modifier.bonus_affinity += 10.0 * AGITATOR_UPTIME;
+            modifier
+                .bonus_conditional_affinity
+                .push(ConditionalAffinity::new(10.0, AGITATOR_UPTIME));
         }
         5 => {
             modifier.bonus_attack += 20.0 * AGITATOR_UPTIME;
-            modifier.bonus_affinity += 15.0 * AGITATOR_UPTIME;
+            modifier
+                .bonus_conditional_affinity
+                .push(ConditionalAffinity::new(15.0, AGITATOR_UPTIME));
         }
         _ => unreachable!("Agitator above maximum level"),
     },
@@ -655,9 +665,15 @@ pub const MAXIMUM_MIGHT: Skill = Skill {
     max: 3,
     apply: |modifier, level, _weapon| match level {
         0 => {}
-        1 => modifier.bonus_affinity += 10.0 * MAXIMUM_MIGHT_UPTIME,
-        2 => modifier.bonus_affinity += 20.0 * MAXIMUM_MIGHT_UPTIME,
-        3 => modifier.bonus_affinity += 30.0 * MAXIMUM_MIGHT_UPTIME,
+        1 => modifier
+            .bonus_conditional_affinity
+            .push(ConditionalAffinity::new(10.0, MAXIMUM_MIGHT_UPTIME)),
+        2 => modifier
+            .bonus_conditional_affinity
+            .push(ConditionalAffinity::new(20.0, MAXIMUM_MIGHT_UPTIME)),
+        3 => modifier
+            .bonus_conditional_affinity
+            .push(ConditionalAffinity::new(30.0, MAXIMUM_MIGHT_UPTIME)),
         _ => unreachable!("Maximum Might above maximum level"),
     },
 };
@@ -869,24 +885,71 @@ pub const WEAKNESS_EXPLOIT: Skill = Skill {
     apply: |modifier, level, _weapon| match level {
         0 => {}
         1 => {
-            modifier.bonus_affinity +=
-                5.0 * WEAKNESS_EXPLOIT_WEAK_POINT_UPTIME + 8.0 * WEAKNESS_EXPLOIT_WOUND_UPTIME;
+            modifier
+                .bonus_conditional_affinity
+                .push(ConditionalAffinity::new(
+                    5.0,
+                    WEAKNESS_EXPLOIT_WEAK_POINT_UPTIME,
+                ));
+            modifier
+                .bonus_conditional_affinity
+                .push(ConditionalAffinity::new(8.0, WEAKNESS_EXPLOIT_WOUND_UPTIME));
         }
         2 => {
-            modifier.bonus_affinity +=
-                10.0 * WEAKNESS_EXPLOIT_WEAK_POINT_UPTIME + 15.0 * WEAKNESS_EXPLOIT_WOUND_UPTIME;
+            modifier
+                .bonus_conditional_affinity
+                .push(ConditionalAffinity::new(
+                    10.0,
+                    WEAKNESS_EXPLOIT_WEAK_POINT_UPTIME,
+                ));
+            modifier
+                .bonus_conditional_affinity
+                .push(ConditionalAffinity::new(
+                    15.0,
+                    WEAKNESS_EXPLOIT_WOUND_UPTIME,
+                ));
         }
         3 => {
-            modifier.bonus_affinity +=
-                15.0 * WEAKNESS_EXPLOIT_WEAK_POINT_UPTIME + 25.0 * WEAKNESS_EXPLOIT_WOUND_UPTIME;
+            modifier
+                .bonus_conditional_affinity
+                .push(ConditionalAffinity::new(
+                    15.0,
+                    WEAKNESS_EXPLOIT_WEAK_POINT_UPTIME,
+                ));
+            modifier
+                .bonus_conditional_affinity
+                .push(ConditionalAffinity::new(
+                    25.0,
+                    WEAKNESS_EXPLOIT_WOUND_UPTIME,
+                ));
         }
         4 => {
-            modifier.bonus_affinity +=
-                20.0 * WEAKNESS_EXPLOIT_WEAK_POINT_UPTIME + 35.0 * WEAKNESS_EXPLOIT_WOUND_UPTIME;
+            modifier
+                .bonus_conditional_affinity
+                .push(ConditionalAffinity::new(
+                    20.0,
+                    WEAKNESS_EXPLOIT_WEAK_POINT_UPTIME,
+                ));
+            modifier
+                .bonus_conditional_affinity
+                .push(ConditionalAffinity::new(
+                    35.0,
+                    WEAKNESS_EXPLOIT_WOUND_UPTIME,
+                ));
         }
         5 => {
-            modifier.bonus_affinity +=
-                30.0 * WEAKNESS_EXPLOIT_WEAK_POINT_UPTIME + 50.0 * WEAKNESS_EXPLOIT_WOUND_UPTIME;
+            modifier
+                .bonus_conditional_affinity
+                .push(ConditionalAffinity::new(
+                    30.0,
+                    WEAKNESS_EXPLOIT_WEAK_POINT_UPTIME,
+                ));
+            modifier
+                .bonus_conditional_affinity
+                .push(ConditionalAffinity::new(
+                    50.0,
+                    WEAKNESS_EXPLOIT_WOUND_UPTIME,
+                ));
         }
         _ => unreachable!("Weakness Exploit above maximum level"),
     },

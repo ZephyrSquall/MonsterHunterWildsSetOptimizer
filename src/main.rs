@@ -101,10 +101,15 @@ fn main() {
             highest_efr_hunter.total_raw_sharpness_mod
         );
         highest_efr_hunter.set.print();
+        println!();
         println!("Decorations:");
         highest_efr_hunter.print_decorations();
+        println!();
         println!("Skills:");
         highest_efr_hunter.print_skills();
+        println!();
+        println!("Stats:");
+        highest_efr_hunter.print_verbose();
     } else {
         println!("No set found.");
     }
